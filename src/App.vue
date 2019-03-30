@@ -1,5 +1,7 @@
 <template>
-  <v-app>
+    <v-app>
+    
+        <Drawer temporary/>
 
         <Toolbar/>
 
@@ -8,22 +10,20 @@
                 <router-view/>
             </v-container>
         </v-content>
-    
-  </v-app>
+    </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
+import Drawer from "@/components/Drawer.vue";
 
 @Component({
     components: {
-        Toolbar
+        Toolbar,
+        Drawer
     }
 })
-export default class App extends Vue {
-
-}
-
+export default class App extends Vue {}
 </script>

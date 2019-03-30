@@ -1,16 +1,17 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, {StoreOptions} from "vuex";
+import Drawer from "@/store/modules/drawer";
+import {IRootState} from "@/store/types";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
+const store: StoreOptions<IRootState> = {
+    state: {
+        version: "1.0.0"
+    },
+    modules: {
+        Drawer
+    }
+};
 
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
-});
+export default new Vuex.Store<IRootState>(store);
