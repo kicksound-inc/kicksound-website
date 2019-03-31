@@ -1,7 +1,7 @@
 <template>
     <v-app>
     
-        <Drawer temporary/>
+        <Drawer/>
 
         <Toolbar/>
 
