@@ -3,8 +3,7 @@ export interface IRootState {
 }
 
 export interface IDrawer {
-    drawer?: boolean;
+    enable?: boolean;
     temporary?: boolean;
     dark?: boolean;
-    right?: boolean;
 }

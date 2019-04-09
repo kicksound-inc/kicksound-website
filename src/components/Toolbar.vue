@@ -4,8 +4,8 @@
         <v-toolbar-title>Kicksound</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-xs-only">
-            <v-btn flat>Connexion</v-btn>
-            <v-btn flat>Inscription</v-btn>
+            <v-btn to="/login" flat>Connexion</v-btn>
+            <v-btn to="/register" flat>Inscription</v-btn>
         </v-toolbar-items>
     </v-toolbar>
 </template>
@@ -18,7 +18,6 @@ import { IDrawer } from "@/store/types";
 
 @Component
 export default class Toolbar extends Vue {
-
     @State("Drawer") drawer!: IDrawer;
 
     onClickDrawer(): void {

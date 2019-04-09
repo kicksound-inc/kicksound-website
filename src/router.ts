@@ -10,9 +10,19 @@ export default new Router({
     routes: [
         {
             path: "/",
-            name: "Test",
+            name: "Home",
             component: Test,
         },
+        {
+            path: "/login",
+            name: "Login",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Login.vue"),
+        },
+        {
+            path: "/register",
+            name: "Register",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Register.vue"),
+        }
         //{
         //path: "/about",
         //name: "about",
