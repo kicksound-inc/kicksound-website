@@ -1,27 +1,23 @@
-import { Module } from "vuex";
+import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { IDrawer, IRootState } from "../types";
 
-const drawer: Module<IDrawer, IRootState> = {
-    state: {
-        enable: false,
-        temporary: true,
-        dark: false
-    },
-    mutations: {
-        switch(state) {
-            state.enable = !state.enable;
-        },
-        changeOptions(state, options: IDrawer) {
-            for (const property in options) {
-                if (options.hasOwnProperty(property)) {
-                    (state as any)[property] = (options as any)[property];
-                }
+@Module
+export default class Drawer extends VuexModule implements IDrawer {
+    public enable: boolean = false;
+    public temporary: boolean = true;
+    public dark: boolean = false;
+
+    @Mutation
+    public switch() {
+        this.enable = !this.enable;
+    }
+
+    @Mutation
+    public changeOptions(options: IDrawer) {
+        for (const property in options) {
+            if (options.hasOwnProperty(property)) {
+                (this as any)[property] = (options as any)[property];
             }
         }
-    },
-    actions: {
-
-    },
-};
-
-export default drawer;
+    }
+}

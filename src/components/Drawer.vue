@@ -17,12 +17,12 @@
         <v-list class="pt-0" dense>
             <v-divider></v-divider>
 
-            <v-list-tile @click="">
+            <v-list-tile to="/login">
                 <v-list-tile-content>
                     <v-list-tile-title>Connexion</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile @click="">
+            <v-list-tile to="/register">
                 <v-list-tile-content>
                     <v-list-tile-title>Inscription</v-list-tile-title>
                 </v-list-tile-content>

@@ -20,7 +20,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary">Login</v-btn>
+                    <v-btn color="primary" @click="clickLogin">Login</v-btn>
                 </v-card-actions>
             </v-card>
         </v-flex>
@@ -32,5 +32,14 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
 @Component
-export default class Login extends Vue {}
+export default class Login extends Vue {
+
+    public created() {
+        console.log("Login component created");
+    }
+
+    public clickLogin(): void {
+        console.log("Click login");
+    }
+}
 </script>

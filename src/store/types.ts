@@ -7,3 +7,15 @@ export interface IDrawer {
     temporary?: boolean;
     dark?: boolean;
 }
+
+export interface IUser {
+    firstname?: string;
+    lastname?: string;
+    type?: number;
+    description?: string;
+    realm?: string;
+    username?: string;
+    email?: string;
+    emailVerified?: true;
+    id?: number;
+}
