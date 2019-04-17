@@ -25,5 +25,13 @@ import Drawer from "@/components/Drawer.vue";
         Drawer
     }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+    public created() {
+        console.log("App component created");
+    }
+
+    public destroyed() {
+        console.log("App component destroyed");
+    }
+}
 </script>

@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { IDrawer, IRootState } from "../types";
+import { IDrawer } from "../types";
 
 @Module
 export default class Drawer extends VuexModule implements IDrawer {

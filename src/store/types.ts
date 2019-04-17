@@ -15,6 +15,7 @@ export interface IUser {
     description?: string;
     realm?: string;
     username?: string;
+    password?: string;
     email?: string;
     emailVerified?: true;
     id?: number;
