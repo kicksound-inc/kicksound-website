@@ -5,6 +5,7 @@ import axios from "axios";
 @Module
 export default class User extends VuexModule implements IUser {
 
+    public token?: string
     public email?: string;
     public username?: string;
     public type?: number;
@@ -41,4 +42,10 @@ export default class User extends VuexModule implements IUser {
     public logout() {
         console.log("Logout mutation");
     }
+
+    @Mutation
+    public setUser(user: IUser) {
+        //this.token
+    }
+    
 }

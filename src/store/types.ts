@@ -9,6 +9,7 @@ export interface IDrawer {
 }
 
 export interface IUser {
+    token?: string;
     firstname?: string;
     lastname?: string;
     type?: number;
