@@ -55,7 +55,12 @@ export default class Login extends Vue {
         this.$store.dispatch("login", {
             username: this.username,
             password: this.password
-        } as IUser);
+        } as IUser).then((response) => {
+            console.log("onClickLogin response : ", response);
+            this.$router.push({name: "Dashboard"});
+        }).catch((error) => {
+            console.error("onClickLogin error : ", error);
+        });
     }
 }
 </script>

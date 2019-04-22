@@ -22,7 +22,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-//import test from "@/assets/paralax1.jpg";
 
 @Component
 export default class Home extends Vue {}
