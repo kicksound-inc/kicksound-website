@@ -1,60 +1,48 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { IUser } from "../types";
-import axios from "axios";
-import router from "@/router";
+import { IUser, ILoginData } from "../types";
+import axios, { AxiosResponse } from "axios";
 
 @Module
 export default class User extends VuexModule implements IUser {
 
+    public userId: number = 0;
     public token: string = "";
-    public email: string = "";
     public username: string = "";
-    public type: number = 0;
 
-    @Action({ commit: "setUser" })
-    public register(payload: IUser) {
+    @Action
+    public async register(payload: IUser) {
         console.log("Register mutation");
 
-        if (process.env.VUE_APP_FAKE_USER) {
-            return {
-                token: "yolo",
-                email: "fake email",
-                username: "fake username",
-                type: 0
-            } as IUser;
-        } else {
-            axios.post("http://localhost:3000/api/accounts", {
+        try {
+            const register = await axios.post("http://localhost:3000/api/accounts", {
                 username: payload.username,
                 email: payload.email,
-                password: payload.password
-            }).catch((err) => {
-                console.error(err);
-            }).then((resp) => {
-                console.log(resp);
+                password: payload.password,
             });
+            console.log("Register Action", register);
+        } catch (err) {
+            console.error(err);
         }
     }
 
     @Action({ commit: "setUser" })
-    public login(payload: IUser) {
+    public async login(payload: IUser) {
         console.log("Login mutation");
 
-        if (process.env.VUE_APP_FAKE_USER) {
-            return {
-                token: "yolo",
-                email: "fake email",
-                username: "fake username",
-                type: 0
-            } as IUser;
-        } else {
-            axios.post("http://localhost:3000/api/accounts/login", {
+        try {
+            const connexion = await axios.post<ILoginData>("http://localhost:3000/api/accounts/login", {
                 username: payload.username,
                 password: payload.password
-            }).catch((err) => {
-                console.error(err);
-            }).then((resp) => {
-                console.log(resp);
             });
+            console.log("Login Action : ", connexion);
+
+            return {
+                userId: connexion.data.userId,
+                token: connexion.data.id,
+                username: payload.username,
+            } as IUser;
+        } catch (err) {
+            console.error("Login Action", err);
         }
     }
 
@@ -65,10 +53,9 @@ export default class User extends VuexModule implements IUser {
 
     @Mutation
     public setUser(user: IUser) {
+        this.userId = user.userId;
         this.token = user.token;
-        this.email = user.email;
         this.username = user.username;
-        this.type = user.type;
     }
 
     get isAuthenticated(): boolean {

@@ -75,7 +75,20 @@ export default class Register extends Vue {
             username: this.username,
             email: this.email,
             password: this.password
-        } as IUser);
+        } as IUser).then((response) => {
+            console.log("onClickRegister : ", response);
+            /*this.$store.dispatch("login", {
+                username: this.username,
+                password: this.password
+            }).then((response) => {
+                console.log("onClickRegister : ", response);
+                this.$router.push({name: "Dashboard"});
+            }).catch((error) => {
+                console.error("onClickRegister : ", error);
+            });*/
+        }).catch((error) => {
+            console.error("onClickRegister : ", error);
+        });
     }
 }
 </script>

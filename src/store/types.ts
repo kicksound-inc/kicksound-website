@@ -9,15 +9,27 @@ export interface IDrawer {
 }
 
 export interface IUser {
+    userId: number;
     token: string;
     firstname?: string;
     lastname?: string;
-    type: number;
+    type?: number;
     description?: string;
     realm?: string;
     username: string;
     password?: string;
-    email: string;
+    email?: string;
     emailVerified?: true;
     id?: number;
+}
+
+export interface IRegisterData {
+
+}
+
+export interface ILoginData {
+    id: string;
+    ttl: number;
+    created: string;
+    userId: number;
 }
