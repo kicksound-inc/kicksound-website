@@ -46,9 +46,19 @@ export default class User extends VuexModule implements IUser {
         }
     }
 
-    @Action
-    public logout() {
+    @Action({ commit: "clearUser"})
+    public async logout(access_token: string) {
         console.log("Logout mutation");
+
+        try {
+            await axios.post(`http://localhost:3000/api/accounts/logout?access_token=${this.token}`, {
+                access_token
+            });
+
+            return;
+        } catch (err) {
+            console.error("Login Action", err);
+        }
     }
 
     @Mutation
@@ -56,6 +66,13 @@ export default class User extends VuexModule implements IUser {
         this.userId = user.userId;
         this.token = user.token;
         this.username = user.username;
+    }
+
+    @Mutation
+    public clearUser() {
+        this.userId = 0;
+        this.token = "";
+        this.username = "";
     }
 
     get isAuthenticated(): boolean {

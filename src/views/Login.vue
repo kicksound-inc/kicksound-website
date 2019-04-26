@@ -3,7 +3,7 @@
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md6 lg4>
                 <v-card>
-                    <v-form>
+                    <v-form @submit.prevent="onClickLogin">
                         <v-card-text>
                             <v-text-field
                                 prepend-icon="person"
@@ -23,7 +23,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="onClickLogin">Login</v-btn>
+                            <v-btn color="primary" type="submit">Login</v-btn>
                         </v-card-actions>
                     </v-form>
                 </v-card>
@@ -50,7 +50,7 @@ export default class Login extends Vue {
         console.log("Login component destroyed");
     }
 
-    public onClickLogin(): void {
+    public onClickLogin(ev: any): void {
         console.log("Click login");
         this.$store.dispatch("login", {
             username: this.username,

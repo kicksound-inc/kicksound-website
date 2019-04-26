@@ -1,53 +1,50 @@
 <template>
-    <v-container>
-        <v-layout align-center justify-center>
-            <v-flex xs12 sm8 md6 lg4>
-                <v-card>
-                    <!--<v-form @submit="onClickRegister">-->
-                    <v-form>
-                        <v-card-text>
-                            <!--<v-form>-->
-                            <v-text-field
-                                prepend-icon="person"
-                                name="username"
-                                label="Username"
-                                type="text"
-                                v-model="username"
-                            ></v-text-field>
-                            <v-text-field
-                                prepend-icon="email"
-                                name="email"
-                                label="Email"
-                                type="email"
-                                v-model="email"
-                            ></v-text-field>
-                            <v-text-field
-                                prepend-icon="lock"
-                                name="password"
-                                label="Password"
-                                id="password"
-                                type="password"
-                                v-model="password"
-                            ></v-text-field>
-                            <v-text-field
-                                prepend-icon="lock"
-                                name="verif-password"
-                                label="Verify Password"
-                                id="verif-password"
-                                type="password"
-                            ></v-text-field>
-                            <!--</v-form>-->
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <!--<v-btn type="submit" color="primary">Register</v-btn>-->
-                            <v-btn color="primary" @click="onClickRegister">Register</v-btn>
-                        </v-card-actions>
-                    </v-form>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+  <v-container>
+    <v-layout align-center justify-center>
+      <v-flex xs12 sm8 md6 lg4>
+        <v-card>
+          <v-form @submit.prevent="onClickRegister">
+            <v-card-text>
+              <v-text-field
+                prepend-icon="person"
+                name="username"
+                label="Username"
+                type="text"
+                v-model="username"
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="email"
+                name="email"
+                label="Email"
+                type="email"
+                v-model="email"
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="lock"
+                name="password"
+                label="Password"
+                id="password"
+                type="password"
+                v-model="password"
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="lock"
+                name="verif-password"
+                label="Verify Password"
+                id="verif-password"
+                type="password"
+                v-model="passwordVerified"
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" type="submit">Register</v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -60,6 +57,7 @@ export default class Register extends Vue {
     @Provide() private username: string = "";
     @Provide() private email: string = "";
     @Provide() private password: string = "";
+    @Provide() private passwordVerified: string = "";
 
     public created() {
         console.log("Register component created");
@@ -69,26 +67,31 @@ export default class Register extends Vue {
         console.log("Register component destroyed");
     }
 
-    public onClickRegister(): void {
+    public onClickRegister(ev: any): void {
         console.log("Click Register");
-        this.$store.dispatch("register", {
-            username: this.username,
-            email: this.email,
-            password: this.password
-        } as IUser).then((response) => {
-            console.log("onClickRegister : ", response);
-            /*this.$store.dispatch("login", {
+
+        if (this.password !== this.passwordVerified) {
+            console.log("Password doesn't match");
+        } else {
+            this.$store.dispatch("register", {
                 username: this.username,
+                email: this.email,
                 password: this.password
-            }).then((response) => {
+            } as IUser).then((response) => {
                 console.log("onClickRegister : ", response);
-                this.$router.push({name: "Dashboard"});
+                this.$store.dispatch("login", {
+                    username: this.username,
+                    password: this.password
+                }).then((response) => {
+                    console.log("OnLoginAfterRegister : ", response);
+                    this.$router.push({name: "Dashboard"});
+                }).catch((error) => {
+                    console.error("OnLoginAfterRegister : ", error);
+                });
             }).catch((error) => {
                 console.error("onClickRegister : ", error);
-            });*/
-        }).catch((error) => {
-            console.error("onClickRegister : ", error);
-        });
+            });
+        }
     }
 }
 </script>
