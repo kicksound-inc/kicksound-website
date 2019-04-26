@@ -1,36 +1,49 @@
 <template>
-    <v-container>
-        <v-layout align-center justify-center>
-            <v-flex xs12 sm8 md6 lg4>
-                <v-card>
-                    <v-form @submit.prevent="onClickLogin">
-                        <v-card-text>
-                            <v-text-field
-                                prepend-icon="person"
-                                name="login"
-                                label="Login"
-                                type="text"
-                                v-model="username"
-                            ></v-text-field>
-                            <v-text-field
-                                prepend-icon="lock"
-                                name="password"
-                                label="Password"
-                                id="password"
-                                type="password"
-                                v-model="password"
-                            ></v-text-field>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="primary" type="submit">Login</v-btn>
-                        </v-card-actions>
-                    </v-form>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <v-img class="background-image" :src="require('@/assets/test.jpg')">
+        <v-container>
+            <v-layout align-center justify-center>
+                <v-flex xs12 sm8 md6 lg4>
+                    <v-card>
+                        <v-toolbar dark color="primary">
+                            <v-toolbar-title>Login</v-toolbar-title>
+                        </v-toolbar>
+                        <v-form @submit.prevent="onClickLogin">
+                            <v-card-text>
+                                <v-text-field
+                                    prepend-icon="person"
+                                    name="login"
+                                    label="Login"
+                                    type="text"
+                                    v-model="username"
+                                ></v-text-field>
+                                <v-text-field
+                                    prepend-icon="lock"
+                                    name="password"
+                                    label="Password"
+                                    id="password"
+                                    type="password"
+                                    v-model="password"
+                                ></v-text-field>
+                            </v-card-text>
+                            <v-card-actions>
+                                <p>Vous n'avez pas de compte ? <router-link to="/register">Enregistre toi</router-link></p>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" type="submit">Login</v-btn>
+                            </v-card-actions>
+                        </v-form>
+                    </v-card>
+                </v-flex>
+            </v-layout>
+        </v-container>
+    </v-img>
 </template>
+
+<style>
+.background-image {
+    height: 100%;
+}
+</style>
+
 
 <script lang="ts">
 import Vue from "vue";

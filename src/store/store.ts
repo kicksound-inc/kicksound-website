@@ -3,7 +3,7 @@ import Vuex, {StoreOptions} from "vuex";
 import Drawer from "@/store/modules/drawer";
 import User from "@/store/modules/user";
 import {IRootState} from "@/store/types";
-import VuexPersistence from 'vuex-persist';
+import VuexPersistence from "vuex-persist";
 
 Vue.use(Vuex);
 

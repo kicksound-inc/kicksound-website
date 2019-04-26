@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { IUser, ILoginData } from "../types";
-import axios, { AxiosResponse } from "axios";
+import { IUser } from "../types";
+import axios from "axios";
 
 @Module
 export default class User extends VuexModule implements IUser {
@@ -30,7 +30,7 @@ export default class User extends VuexModule implements IUser {
         console.log("Login mutation");
 
         try {
-            const connexion = await axios.post<ILoginData>("http://localhost:3000/api/accounts/login", {
+            const connexion = await axios.post("http://localhost:3000/api/accounts/login", {
                 username: payload.username,
                 password: payload.password
             });

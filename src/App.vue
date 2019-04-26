@@ -4,7 +4,7 @@
 
         <Toolbar/>
 
-        <v-content>
+        <v-content :class="{ fullScreenImage: enableFullScreenImage() }">
             <router-view/>
         </v-content>
     </v-app>
@@ -12,6 +12,7 @@
 
 <style>
     html { overflow-y: auto !important }
+    .fullScreenImage { height: 100vh; }
 </style>
 
 
@@ -28,12 +29,17 @@ import Drawer from "@/components/Drawer.vue";
     }
 })
 export default class App extends Vue {
+
     public created() {
         console.log("App component created");
     }
 
     public destroyed() {
         console.log("App component destroyed");
+    }
+
+    public enableFullScreenImage(): boolean {
+        return this.$router.currentRoute.meta.enableFullScreenImage === true ? true : false;
     }
 }
 </script>

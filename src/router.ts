@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "@/views/Home.vue";
+import Login from "@/views/Login.vue";
 import store from "@/store/store";
 
 Vue.use(Router);
@@ -11,18 +11,20 @@ const router: Router = new Router({
     routes: [
         {
             path: "/",
-            name: "Home",
-            component: Home,
+            name: "Login",
+            component: Login,
+            meta: { enableFullScreenImage: true }
         },
-        {
+        /*{
             path: "/login",
             name: "Login",
             component: () => import("./views/Login.vue"),
-        },
+        },*/
         {
             path: "/register",
             name: "Register",
             component: () => import("./views/Register.vue"),
+            meta: { enableFullScreenImage: true }
         },
         {
             path: "/dashboard",

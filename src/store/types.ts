@@ -22,14 +22,3 @@ export interface IUser {
     emailVerified?: true;
     id?: number;
 }
-
-export interface IRegisterData {
-
-}
-
-export interface ILoginData {
-    id: string;
-    ttl: number;
-    created: string;
-    userId: number;
-}
