@@ -15,11 +15,6 @@ const router: Router = new Router({
             component: Login,
             meta: { enableFullScreenImage: true }
         },
-        /*{
-            path: "/login",
-            name: "Login",
-            component: () => import("./views/Login.vue"),
-        },*/
         {
             path: "/register",
             name: "Register",
