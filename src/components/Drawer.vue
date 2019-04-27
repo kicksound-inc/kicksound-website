@@ -1,6 +1,7 @@
 <template>
     <v-navigation-drawer
         fixed
+        right
         v-model="drawer.enable"
         disable-resize-watcher
         :temporary="drawer.temporary"
@@ -17,13 +18,7 @@
 
         <v-list class="pt-0" dense>
             <v-divider></v-divider>
-
             <v-list-tile to="/">
-                <v-list-tile-content>
-                    <v-list-tile-title>Acceuil</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile to="/login">
                 <v-list-tile-content>
                     <v-list-tile-title>Connexion</v-list-tile-title>
                 </v-list-tile-content>
