@@ -4,7 +4,6 @@ export interface IRootState {
 
 export interface IDrawer {
     enable?: boolean;
-    temporary?: boolean;
     dark?: boolean;
 }
 

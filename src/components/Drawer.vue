@@ -4,7 +4,7 @@
         right
         v-model="drawer.enable"
         disable-resize-watcher
-        :temporary="drawer.temporary"
+        temporary
         :dark="drawer.dark"
         app
     >

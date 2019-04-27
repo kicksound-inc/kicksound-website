@@ -4,7 +4,6 @@ import { IDrawer } from "../types";
 @Module
 export default class Drawer extends VuexModule implements IDrawer {
     public enable: boolean = false;
-    public temporary: boolean = true;
     public dark: boolean = false;
 
     @Mutation
