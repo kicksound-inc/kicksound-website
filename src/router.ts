@@ -13,13 +13,15 @@ const router: Router = new Router({
             path: "/",
             name: "Login",
             component: Login,
-            meta: { enableFullScreenImage: true }
+            beforeEnter: denyAuth,
+            meta: { enableFullScreenImage: true}
         },
         {
             path: "/register",
             name: "Register",
             component: () => import("./views/Register.vue"),
-            meta: { enableFullScreenImage: true }
+            beforeEnter: denyAuth,
+            meta: { enableFullScreenImage: true}
         },
         {
             path: "/dashboard",
@@ -43,5 +45,15 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+function denyAuth(to: any, from: any, next: any) {
+    if (store.getters.isAuthenticated) {
+        next({
+            name: from.name ? from.name : "Dashboard"
+        });
+    } else {
+        next();
+    }
+}
 
 export default router;
