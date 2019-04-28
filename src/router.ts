@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Login from "@/views/Login.vue";
 import store from "@/store/store";
+import NotFound from "@/views/NotFound.vue";
 
 Vue.use(Router);
 
@@ -28,6 +29,10 @@ const router: Router = new Router({
             name: "Dashboard",
             component: () => import("./views/Dashboard.vue"),
             meta: { requireAuth: true }
+        },
+        { 
+            path: "*",
+            component: NotFound 
         }
     ],
 });
