@@ -11,7 +11,7 @@ const router: Router = new Router({
     base: process.env.BASE_URL,
     routes: [
         {
-            path: "/",
+            path: "/login",
             name: "Login",
             component: Login,
             beforeEnter: denyAuth,
@@ -25,14 +25,14 @@ const router: Router = new Router({
             meta: { enableFullScreenImage: true}
         },
         {
-            path: "/dashboard",
-            name: "Dashboard",
+            path: "/",
+            name: "Home",
             component: () => import("./views/Dashboard.vue"),
             meta: { requireAuth: true }
         },
-        { 
+        {
             path: "*",
-            component: NotFound 
+            component: NotFound
         }
     ],
 });
@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
 function denyAuth(to: any, from: any, next: any) {
     if (store.getters.isAuthenticated) {
         next({
-            name: from.name ? from.name : "Dashboard"
+            name: from.name ? from.name : "Home"
         });
     } else {
         next();
