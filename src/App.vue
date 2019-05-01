@@ -53,9 +53,8 @@ export default class App extends Vue {
     }
 
     public onResize() {
-        /*window.innerWidth < 600
-            ? this.$store.commit("setDrawerDesktop", false)
-            : this.$store.commit("setDrawerDesktop", true);*/
+        if(window.innerWidth < 600)
+            this.$store.commit("setDrawerDesktop", false);
     }
 }
 </script>
