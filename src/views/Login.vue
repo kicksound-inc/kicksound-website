@@ -70,7 +70,7 @@ export default class Login extends Vue {
             password: this.password
         } as IUser).then((response) => {
             console.log("onClickLogin response : ", response);
-            this.$store.commit("EnableDesktop");
+            this.$store.commit("setDrawerDesktop", true);
             this.$router.push({name: "Home"});
         }).catch((error) => {
             console.error("onClickLogin error : ", error);

@@ -8,33 +8,23 @@ export default class Drawer extends VuexModule implements IDrawer {
     public dark: boolean = false;
 
     @Mutation
-    public SwitchDesktop() {
+    public switchDesktop() {
         this.enableDesktop = !this.enableDesktop;
     }
 
     @Mutation
-    public DisableDesktop() {
-        this.enableDesktop = false;
+    public setDrawerDesktop(enable: boolean) {
+        this.enableDesktop = enable;
     }
 
     @Mutation
-    public EnableDesktop() {
-        this.enableDesktop = true;
-    }
-
-    @Mutation
-    public SwitchMobile() {
+    public switchMobile() {
         this.enableMobile = !this.enableMobile;
     }
 
     @Mutation
-    public DisableMobile() {
-        this.enableMobile = false;
-    }
-
-    @Mutation
-    public EnableMobile() {
-        this.enableMobile = true;
+    public setDrawerMobile(enable: boolean) {
+        this.enableMobile = enable;
     }
 
     @Mutation

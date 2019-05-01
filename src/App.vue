@@ -1,6 +1,5 @@
 <template>
-    <v-app>
-
+    <v-app v-resize="onResize">
         <DrawerDesktop/>
         <DrawerMobile/>
 
@@ -13,8 +12,12 @@
 </template>
 
 <style>
-    html { overflow-y: auto !important }
-    .fullScreenImage { height: 100vh; }
+html {
+    overflow-y: auto !important;
+}
+.fullScreenImage {
+    height: 100vh;
+}
 </style>
 
 
@@ -24,6 +27,7 @@ import { Component } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: {
@@ -43,7 +47,15 @@ export default class App extends Vue {
     }
 
     public enableFullScreenImage(): boolean {
-        return this.$router.currentRoute.meta.enableFullScreenImage === true ? true : false;
+        return this.$router.currentRoute.meta.enableFullScreenImage === true
+            ? true
+            : false;
+    }
+
+    public onResize() {
+        /*window.innerWidth < 600
+            ? this.$store.commit("setDrawerDesktop", false)
+            : this.$store.commit("setDrawerDesktop", true);*/
     }
 }
 </script>

@@ -2,6 +2,7 @@
     <v-navigation-drawer
         fixed
         left
+        stateless
         clipped
         v-model="drawer.enableDesktop"
         disable-resize-watcher

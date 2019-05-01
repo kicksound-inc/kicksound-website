@@ -1,5 +1,5 @@
 <template>
-    <div v-resize="onResize">
+    <div>
         <v-toolbar v-if="!isAuthenticated" fixed app>
             <v-layout align-center>
                 <v-flex xs3></v-flex>
@@ -13,7 +13,7 @@
                 </v-flex>
             </v-layout>
         </v-toolbar>
-        <v-toolbar v-else fixed :clipped-left="!isMobile" app>
+        <v-toolbar v-else fixed clipped-left app>
             <v-toolbar-side-icon class="hidden-xs-only" @click="onClickDrawerDesktop"></v-toolbar-side-icon>
             <v-toolbar-title>
                 <router-link to="/" class="title-custom">Kicksound</router-link>
@@ -48,14 +48,12 @@ export default class Toolbar extends Vue {
     @State("User") user!: IUser;
     @Getter("isAuthenticated") isAuthenticated!: boolean;
 
-    private isMobile: boolean = false;
-
     onClickDrawerDesktop(): void {
-        this.$store.commit("SwitchDesktop");
+        this.$store.commit("switchDesktop");
     }
 
     onClickDrawerMobile(): void {
-        this.$store.commit("SwitchMobile");
+        this.$store.commit("switchMobile");
     }
 
     onClickLogout() {
@@ -69,12 +67,6 @@ export default class Toolbar extends Vue {
             .catch(error => {
                 console.error("Logout error");
             });
-    }
-
-    onResize() {
-        window.innerWidth < 600
-            ? (this.isMobile = true)
-            : (this.isMobile = false);
     }
 }
 </script>

@@ -90,6 +90,7 @@ export default class Register extends Vue {
                     password: this.password
                 }).then((response) => {
                     console.log("OnLoginAfterRegister : ", response);
+                    this.$store.commit("setDrawerDesktop", true);
                     this.$router.push({name: "Home"});
                 }).catch((error) => {
                     console.error("OnLoginAfterRegister : ", error);
