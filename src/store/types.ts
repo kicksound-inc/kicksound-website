@@ -5,6 +5,8 @@ export interface IRootState {
 export interface IDrawer {
     enable?: boolean;
     dark?: boolean;
+    temporary?: boolean;
+    clipped?: boolean;
 }
 
 export interface IUser {
@@ -20,4 +22,13 @@ export interface IUser {
     email?: string;
     emailVerified?: true;
     id?: number;
+}
+
+export interface IDrawerItem {
+    name: string;
+    icon?: string;
+    route?: string;
+    click: any;
+    requireAuth?: boolean;
+    excludeDesktop?: boolean;
 }

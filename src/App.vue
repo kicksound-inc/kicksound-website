@@ -1,6 +1,8 @@
 <template>
     <v-app>
-        <Drawer/>
+
+        <DrawerDesktop/>
+        <DrawerMobile/>
 
         <Toolbar/>
 
@@ -20,12 +22,14 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
-import Drawer from "@/components/Drawer.vue";
+import DrawerMobile from "@/components/DrawerMobile.vue";
+import DrawerDesktop from "@/components/DrawerDesktop.vue";
 
 @Component({
     components: {
         Toolbar,
-        Drawer
+        DrawerDesktop,
+        DrawerMobile
     }
 })
 export default class App extends Vue {

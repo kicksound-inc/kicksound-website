@@ -57,6 +57,7 @@ function denyAuth(to: any, from: any, next: any) {
             name: from.name ? from.name : "Home"
         });
     } else {
+        store.commit("DisableDesktop");
         next();
     }
 }

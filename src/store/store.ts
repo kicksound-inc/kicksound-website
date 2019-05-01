@@ -8,8 +8,9 @@ import VuexPersistence from "vuex-persist";
 Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
-})
+  storage: window.localStorage,
+  modules: ["User"],
+});
 
 const store: StoreOptions<IRootState> = {
     state: {
