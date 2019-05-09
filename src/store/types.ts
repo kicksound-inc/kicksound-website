@@ -32,3 +32,17 @@ export interface IDrawerItem {
     requireAuth?: boolean;
     excludeDesktop?: boolean;
 }
+
+export interface ISnackbar {
+    enable: boolean;
+    timeout: number;
+    message: string;
+    color: string;
+}
+
+
+export enum TypeMessage {
+    INFO = "info",
+    ERROR = "error",
+    SUCCESS = "success"
+}

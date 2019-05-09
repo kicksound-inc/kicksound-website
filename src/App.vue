@@ -5,6 +5,16 @@
 
         <Toolbar/>
 
+        <v-snackbar
+            v-model="snackbar.enable"
+            right
+            top
+            :timeout="snackbar.timeout"
+            :color="snackbar.color"
+        >
+            {{snackbar.message}}
+        </v-snackbar>
+
         <v-content :class="{ fullScreenImage: enableFullScreenImage() }">
             <router-view/>
         </v-content>
@@ -28,6 +38,7 @@ import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
 import { State } from "vuex-class";
+import { ISnackbar } from './store/types';
 
 @Component({
     components: {
@@ -37,6 +48,8 @@ import { State } from "vuex-class";
     }
 })
 export default class App extends Vue {
+
+    @State("Snackbar") snackbar!: ISnackbar;
 
     public created() {
         console.log("App component created");

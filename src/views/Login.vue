@@ -10,23 +10,30 @@
                         <v-form @submit.prevent="onClickLogin">
                             <v-card-text>
                                 <v-text-field
+                                    v-validate="'required'"
                                     prepend-icon="person"
                                     name="login"
                                     label="Login"
                                     type="text"
                                     v-model="username"
+                                    :error-messages="errors.collect('login')"
                                 ></v-text-field>
                                 <v-text-field
+                                    v-validate="'required'"
                                     prepend-icon="lock"
                                     name="password"
                                     label="Password"
                                     id="password"
                                     type="password"
                                     v-model="password"
+                                    :error-messages="errors.collect('password')"
                                 ></v-text-field>
                             </v-card-text>
                             <v-card-actions>
-                                <p>Vous n'avez pas de compte ? <router-link to="/register">Enregistre toi</router-link></p>
+                                <p>
+                                    Vous n'avez pas de compte ?
+                                    <router-link to="/register">Enregistre toi</router-link>
+                                </p>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" type="submit">Login</v-btn>
                             </v-card-actions>
@@ -48,9 +55,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Provide } from "vue-property-decorator";
-import { IUser } from "../store/types";
+import { IUser, ISnackbar, TypeMessage } from "../store/types";
+import { HttpError } from "@/store/errors";
 
-@Component
+@Component({
+    $_veeValidate: { validator: "new" }
+})
 export default class Login extends Vue {
     @Provide() private username: string = "";
     @Provide() private password: string = "";
@@ -63,18 +73,31 @@ export default class Login extends Vue {
         console.log("Login component destroyed");
     }
 
-    public onClickLogin(ev: any): void {
+    public async onClickLogin(ev: any): Promise<any> {
         console.log("Click login");
-        this.$store.dispatch("login", {
-            username: this.username,
-            password: this.password
-        } as IUser).then((response) => {
-            console.log("onClickLogin response : ", response);
-            this.$store.commit("setDrawerDesktop", true);
-            this.$router.push({name: "Home"});
-        }).catch((error) => {
-            console.error("onClickLogin error : ", error);
-        });
+
+        if (await this.$validator.validate()) {
+            this.$store
+                .dispatch("login", {
+                    username: this.username,
+                    password: this.password
+                } as IUser)
+                .then(response => {
+                    console.log("onClickLogin response : ", response);
+                    this.$store.commit("setDrawerDesktop", true);
+                    this.$router.push({ name: "Home" });
+                })
+                .catch((error: Error) => {
+                    if (error instanceof HttpError)
+                        this.$store.commit("showSnackbar", {
+                            message:
+                                error.message[0].toUpperCase() +
+                                error.message.slice(1),
+                            color: TypeMessage.ERROR
+                        } as ISnackbar);
+                    else console.error(error);
+                });
+        }
     }
 }
 </script>

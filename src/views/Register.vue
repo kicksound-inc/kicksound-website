@@ -4,46 +4,58 @@
             <v-layout align-center justify-center>
                 <v-flex xs12 sm8 md6 lg4>
                     <v-card>
-						<v-toolbar dark color="primary">
+                        <v-toolbar dark color="primary">
                             <v-toolbar-title>Register</v-toolbar-title>
                         </v-toolbar>
                         <v-form @submit.prevent="onClickRegister">
                             <v-card-text>
                                 <v-text-field
+                                    v-validate="'required'"
                                     prepend-icon="person"
                                     name="username"
                                     label="Username"
                                     type="text"
                                     v-model="username"
+                                    :error-messages="errors.collect('username')"
                                 ></v-text-field>
                                 <v-text-field
+                                    v-validate="'required|email'"
                                     prepend-icon="email"
                                     name="email"
                                     label="Email"
                                     type="email"
                                     v-model="email"
+                                    :error-messages="errors.collect('email')"
                                 ></v-text-field>
                                 <v-text-field
+                                    ref="password"
+                                    v-validate="'required'"
                                     prepend-icon="lock"
                                     name="password"
                                     label="Password"
                                     id="password"
                                     type="password"
                                     v-model="password"
+                                    :error-messages="errors.collect('password')"
                                 ></v-text-field>
                                 <v-text-field
+                                    v-validate="'required|confirmed:password'"
                                     prepend-icon="lock"
                                     name="verif-password"
                                     label="Verify Password"
                                     id="verif-password"
                                     type="password"
                                     v-model="passwordVerified"
+                                    :error-messages="errors.collect('verif-password')"
                                 ></v-text-field>
                             </v-card-text>
                             <v-card-actions>
-								<p mb-0>Déjà un compte ? <router-link to="/">Connecte toi</router-link></p>
+                                <p mb-0>
+                                    Déjà un compte ?
+                                    <router-link to="/">Connecte toi</router-link>
+                                </p>
                                 <v-spacer></v-spacer>
-								<v-btn color="primary" type="submit">Register</v-btn>
+                                <v-btn color="primary" type="submit">Register</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>
@@ -56,9 +68,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Model, Provide } from "vue-property-decorator";
-import { IUser } from "../store/types";
+import { IUser, ISnackbar, TypeMessage } from "../store/types";
+import { HttpError } from "@/store/errors";
 
-@Component
+@Component({
+    $_veeValidate: { validator: "new" }
+})
 export default class Register extends Vue {
     @Provide() private username: string = "";
     @Provide() private email: string = "";
@@ -73,32 +88,56 @@ export default class Register extends Vue {
         console.log("Register component destroyed");
     }
 
-    public onClickRegister(ev: any): void {
+    public async onClickRegister(ev: any): Promise<any> {
         console.log("Click Register");
-
-        if (this.password !== this.passwordVerified) {
-            console.log("Password doesn't match");
-        } else {
-            this.$store.dispatch("register", {
-                username: this.username,
-                email: this.email,
-                password: this.password
-            } as IUser).then((response) => {
-                console.log("onClickRegister : ", response);
-                this.$store.dispatch("login", {
-                    username: this.username,
-                    password: this.password
-                }).then((response) => {
-                    console.log("OnLoginAfterRegister : ", response);
-                    this.$store.commit("setDrawerDesktop", true);
-                    this.$router.push({name: "Home"});
-                }).catch((error) => {
-                    console.error("OnLoginAfterRegister : ", error);
-                });
-            }).catch((error) => {
-                console.error("onClickRegister : ", error);
-            });
+        if (await this.$validator.validate()) {
+            if (this.password !== this.passwordVerified) {
+                console.log("Password doesn't match");
+                this.$store.commit("showSnackbar", {
+                    message: "Les mots de passe ne correspondent pas",
+                    color: TypeMessage.ERROR
+                } as ISnackbar);
+            } else {
+                this.$store
+                    .dispatch("register", {
+                        username: this.username,
+                        email: this.email,
+                        password: this.password
+                    } as IUser)
+                    .then(response => {
+                        console.log("onClickRegister : ", response);
+                        this.$store
+                            .dispatch("login", {
+                                username: this.username,
+                                password: this.password
+                            })
+                            .then(response => {
+                                console.log(
+                                    "OnLoginAfterRegister : ",
+                                    response
+                                );
+                                this.$store.commit("setDrawerDesktop", true);
+                                this.$router.push({ name: "Home" });
+                            })
+                            .catch(error => {
+                                this.onError(error);
+                            });
+                    })
+                    .catch(error => {
+                        this.onError(error);
+                    });
+            }
         }
+    }
+
+    private onError(error: any) {
+        if (error instanceof HttpError)
+            this.$store.commit("showSnackbar", {
+                message:
+                    error.message[0].toUpperCase() + error.message.slice(1),
+                color: TypeMessage.ERROR
+            } as ISnackbar);
+        else console.error(error);
     }
 }
 </script>

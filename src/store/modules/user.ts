@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { IUser } from "../types";
-import axios from "axios";
+import { HttpError } from "@/store/errors";
+import axios, { AxiosResponse, AxiosError } from "axios";
 
 @Module
 export default class User extends VuexModule implements IUser {
@@ -9,7 +10,7 @@ export default class User extends VuexModule implements IUser {
     public token: string = "";
     public username: string = "";
 
-    @Action
+    @Action({ rawError: true })
     public async register(payload: IUser) {
         console.log("Register mutation");
 
@@ -21,11 +22,15 @@ export default class User extends VuexModule implements IUser {
             });
             console.log("Register Action", register);
         } catch (err) {
-            console.error(err);
+            console.error("Register Action", err.response);
+            throw new HttpError(
+                err.response.data.error.message,
+                err.response.data.error.code
+            );
         }
     }
 
-    @Action({ commit: "setUser" })
+    @Action({ commit: "setUser", rawError: true })
     public async login(payload: IUser) {
         console.log("Login mutation");
 
@@ -42,7 +47,10 @@ export default class User extends VuexModule implements IUser {
                 username: payload.username,
             } as IUser;
         } catch (err) {
-            console.error("Login Action", err);
+            throw new HttpError(
+                err.response.data.error.message,
+                err.response.data.error.code
+            );
         }
     }
 

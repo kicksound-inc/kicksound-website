@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex, {StoreOptions} from "vuex";
 import Drawer from "@/store/modules/drawer";
 import User from "@/store/modules/user";
+import Snackbar from "@/store/modules/snackbar";
 import {IRootState} from "@/store/types";
 import VuexPersistence from "vuex-persist";
 
@@ -18,7 +19,8 @@ const store: StoreOptions<IRootState> = {
     },
     modules: {
         Drawer,
-        User
+        User,
+        Snackbar
     },
     plugins: [vuexLocal.plugin]
 };
