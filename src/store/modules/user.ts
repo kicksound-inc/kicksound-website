@@ -1,7 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { IUser } from "../types";
 import { HttpError } from "@/store/errors";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import axios from "axios";
 
 @Module
 export default class User extends VuexModule implements IUser {
@@ -15,7 +15,7 @@ export default class User extends VuexModule implements IUser {
         console.log("Register mutation");
 
         try {
-            const register = await axios.post("http://localhost:3000/api/accounts", {
+            const register = await axios.post("/accounts", {
                 username: payload.username,
                 email: payload.email,
                 password: payload.password,
@@ -35,7 +35,7 @@ export default class User extends VuexModule implements IUser {
         console.log("Login mutation");
 
         try {
-            const connexion = await axios.post("http://localhost:3000/api/accounts/login", {
+            const connexion = await axios.post("/accounts/login", {
                 username: payload.username,
                 password: payload.password
             });
@@ -55,13 +55,11 @@ export default class User extends VuexModule implements IUser {
     }
 
     @Action({ commit: "clearUser"})
-    public async logout(access_token: string) {
+    public async logout() {
         console.log("Logout mutation");
 
         try {
-            await axios.post(`http://localhost:3000/api/accounts/logout?access_token=${this.token}`, {
-                access_token
-            });
+            await axios.post("/accounts/logout");
 
             return;
         } catch (err) {
@@ -85,5 +83,9 @@ export default class User extends VuexModule implements IUser {
 
     get isAuthenticated(): boolean {
         return !!this.token;
+    }
+
+    get getToken(): string {
+        return this.token;
     }
 }
