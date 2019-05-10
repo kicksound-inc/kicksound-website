@@ -41,6 +41,8 @@ export default class User extends VuexModule implements IUser {
             });
             console.log("Login Action : ", connexion);
 
+            axios.defaults.headers.common["Authorization"] = connexion.data.id;
+
             return {
                 userId: connexion.data.userId,
                 token: connexion.data.id,
