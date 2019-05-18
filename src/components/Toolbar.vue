@@ -19,6 +19,22 @@
                 <router-link to="/" class="title-custom">Kicksound</router-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-form id="searchbar" @submit.prevent="onClickSearch">
+                <v-autocomplete
+                    :append-icon="null"
+                    :search-input.sync="search"
+                    cache-items
+                    flat
+                    hide-no-data
+                    hide-details
+                    clearable
+                    label="Search"
+                    deletable-chips
+                    prepend-inner-icon="search"
+                    solo-inverted
+                ></v-autocomplete>
+            </v-form>
+            <v-spacer></v-spacer>
             <v-toolbar-items v-if="isAuthenticated" class="hidden-xs-only">
                 <v-btn flat>{{ user.username }}</v-btn>
                 <v-btn flat @click="onClickLogout">Logout</v-btn>
@@ -33,11 +49,15 @@
     color: inherit;
     text-decoration: none;
 }
+
+#searchbar {
+    width: 800px;
+}
 </style>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Emit } from "vue-property-decorator";
+import { Component, Provide, Watch } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
 import { IDrawer, IRootState, IUser } from "@/store/types";
 
@@ -47,6 +67,8 @@ export default class Toolbar extends Vue {
     @State("Drawer") drawer!: IDrawer;
     @State("User") user!: IUser;
     @Getter("isAuthenticated") isAuthenticated!: boolean;
+
+    private search: string | null = null;
 
     onClickDrawerDesktop(): void {
         this.$store.commit("switchDesktop");
@@ -68,5 +90,15 @@ export default class Toolbar extends Vue {
                 console.error("Logout error");
             });
     }
+
+    onClickSearch() {
+        alert("Search : " + this.search);
+    }
+
+    @Watch("search")
+    onSearchChange(val: string, oldVal: string) {
+        console.log(val);
+    }
+
 }
 </script>

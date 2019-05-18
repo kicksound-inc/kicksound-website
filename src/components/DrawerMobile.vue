@@ -37,7 +37,7 @@
         <v-list v-if="isAuthenticated" class="pt-0" dense>
             <v-list-tile to="/">
                 <v-list-tile-content>
-                    <v-list-tile-title>Accueil</v-list-tile-title>
+                    <v-list-tile-title>Parcourir</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
