@@ -1,3 +1,6 @@
+/**
+ * Interface
+ */
 export interface IRootState {
     version: string;
 }
@@ -40,6 +43,28 @@ export interface ISnackbar {
     color: string;
 }
 
+export interface IEvents {
+    events: IEvent[];
+    loading: boolean;
+}
+export interface IEvent {
+    title: string;
+    description: string;
+    ticketsNumber: number;
+    picture: string;
+    disabled: boolean;
+    id: number;
+    accountId: number;
+}
+
+export interface ILoading {
+    enable: boolean;
+    value: number;
+}
+
+/**
+ * ENUM
+ */
 
 export enum TypeMessage {
     INFO = "info",

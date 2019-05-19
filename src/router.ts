@@ -31,6 +31,12 @@ const router: Router = new Router({
             meta: { requireAuth: true }
         },
         {
+            path: "/events",
+            name: "Events",
+            component: () => import("./views/Events.vue"),
+            meta: { requireAuth: true }
+        },
+        {
             path: "*",
             component: NotFound
         }

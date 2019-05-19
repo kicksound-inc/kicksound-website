@@ -16,6 +16,7 @@
         </v-snackbar>
 
         <v-content :class="{ fullScreenImage: enableFullScreenImage() }">
+            <Loading></Loading>
             <router-view/>
         </v-content>
     </v-app>
@@ -33,18 +34,20 @@ html {
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Provide } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
 import { State } from "vuex-class";
 import { ISnackbar } from './store/types';
+import Loading from "@/components/Loading.vue";
 
 @Component({
     components: {
         Toolbar,
         DrawerDesktop,
-        DrawerMobile
+        DrawerMobile,
+        Loading
     }
 })
 export default class App extends Vue {

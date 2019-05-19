@@ -90,4 +90,8 @@ export default class User extends VuexModule implements IUser {
     get getToken(): string {
         return this.token;
     }
+
+    get getUserId(): number {
+        return this.userId;
+    }
 }
