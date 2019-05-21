@@ -43,7 +43,7 @@
         </v-list>
 
         <v-list v-if="isAuthenticated" class="pt-0" dense>
-            <v-list-tile to="/playlist">
+            <v-list-tile to="/playlists">
                 <v-list-tile-content>
                     <v-list-tile-title>Playlist</v-list-tile-title>
                 </v-list-tile-content>

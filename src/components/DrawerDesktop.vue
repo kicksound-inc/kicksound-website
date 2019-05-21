@@ -22,7 +22,7 @@
         </v-list>
 
         <v-list class="pt-0" dense>
-            <v-list-tile to="/playlist">
+            <v-list-tile to="/playlists">
                 <v-list-tile-action>
                     <v-icon>library_music</v-icon>
                 </v-list-tile-action>

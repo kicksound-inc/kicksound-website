@@ -31,9 +31,21 @@ const router: Router = new Router({
             meta: { requireAuth: true }
         },
         {
+            path: "/playlists",
+            name: "Playlists",
+            component: () => import("./views/Playlists.vue"),
+            meta: { requireAuth: true }
+        },
+        {
             path: "/events",
             name: "Events",
             component: () => import("./views/Events.vue"),
+            meta: { requireAuth: true }
+        },
+        {
+            path: "/lives",
+            name: "Lives",
+            component: () => import("./views/Lives.vue"),
             meta: { requireAuth: true }
         },
         {
