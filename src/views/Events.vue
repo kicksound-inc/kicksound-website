@@ -43,11 +43,19 @@
                                                 box
                                                 label="Picture*"
                                                 v-validate="'required'"
-                                                name="picture"
+                                                name="pictureName"
                                                 type="text"
-                                                v-model="picture"
+                                                v-model="pictureName"
                                                 :error-messages="errors.collect('picture')"
+                                                @click="pickFile"
                                             ></v-text-field>
+                                            <input
+                                                type="file"
+                                                style="display: none"
+                                                ref="image"
+                                                accept="image/*"
+                                                @change="onFilePicked"
+                                            >
                                         </v-flex>
                                         <v-flex xs12 sm3 md3>
                                             <v-menu
@@ -165,6 +173,10 @@
         <v-divider></v-divider>
         <v-container fluid>
             <v-layout wrap>
+                <v-flex
+                    v-if="!events.events.length"
+                    class="text-xs-center"
+                >Il n'y a aucun événements</v-flex>
                 <v-flex v-for="event in events.events" :key="event.id" pa-2 xs12 sm9 md6 lg4>
                     <v-card to="/events">
                         <v-img
@@ -194,15 +206,18 @@ import { IEvent, IEvents } from "../store/types";
 })
 export default class Event extends Vue {
     @State("Events") events!: IEvents;
-    @Provide("DialogCreation") private dialogCreation: boolean = false;
-    @Provide("title") private title: string = "";
-    @Provide("tickets") private tickets: string = "";
-    @Provide("picture") private picture: string = "";
-    @Provide("description") private description: string = "";
-    @Provide("datePicker") private datePicker: string = "";
-    @Provide("date") private date: string = "";
-    @Provide("timePicker") private timePicker: string = "";
-    @Provide("time") private time: string = "";
+
+    private dialogCreation: boolean = false;
+    private title: string = "";
+    private tickets: string = "";
+    private pictureName: string = "";
+    private description: string = "";
+    private datePicker: string = "";
+    private date: string = "";
+    private timePicker: string = "";
+    private time: string = "";
+
+    private imageFile: File | null = null;
 
     public created() {
         this.$store.dispatch("requestEvents");
@@ -211,11 +226,38 @@ export default class Event extends Vue {
     public async onClickCreateEvent(ev: any): Promise<any> {
         alert("test");
         if (await this.$validator.validate()) {
+            console.log("ImageFile", this.imageFile);
         }
     }
 
     public onClose() {
         console.log("ONCLOSE");
+    }
+    
+    $refs!: {
+        image: HTMLInputElement
+    }
+
+    public pickFile() {
+        this.$refs.image.click();
+    }
+
+    public onFilePicked(evt: any) {
+        const files = evt.target.files;
+        if (files[0] !== undefined) {
+            this.pictureName = files[0].name;
+            if (this.pictureName.lastIndexOf(".") <= 0) {
+                return;
+            }
+            const fr = new FileReader();
+            fr.readAsDataURL(files[0]);
+            fr.addEventListener("load", () => {
+                this.imageFile = files[0];
+            });
+        } else {
+            this.pictureName = "";
+            this.imageFile = null;
+        }
     }
 }
 </script>
