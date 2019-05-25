@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { IEvent, IEvents } from "../types";
-import axios from 'axios';
+import axios from "axios";
 
 @Module
 export default class Events extends VuexModule implements IEvents {
@@ -11,7 +11,7 @@ export default class Events extends VuexModule implements IEvents {
     @Action({ commit: "populateEvents", rawError: true })
     public async requestEvents() {
         try {
-            console.log("context", this);
+            //TODO: modifier le loading via interceptor de axios maybe
             this.context.rootState.Loading.enable = true;
             const events = await axios.get(
                 `/accounts/${this.context.getters.getUserId}/events`/*,
@@ -25,12 +25,36 @@ export default class Events extends VuexModule implements IEvents {
             console.log("Events", events);
             return events.data;
         } catch(err) {
-            console.log(err);
+            throw new Error(err);
         }
+    }
+
+    @Action({ commit: "addEvent", rawError: true})
+    public async createEvent(event: IEvent) {
+        try {
+            const {data} = await axios.post(
+                `/Events/`,
+                event
+            );
+            console.log(data);
+            return data;
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
+
+    @Action({rawError: true})
+    public async uploadPicture(file: File) {
+        console.log(file);
     }
 
     @Mutation
     public populateEvents(events: IEvent[]) {
         this.events = events;
+    }
+
+    @Mutation
+    public addEvent(event: IEvent) {
+        this.events.push(event);
     }
 }

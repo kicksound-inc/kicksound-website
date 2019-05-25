@@ -12,9 +12,9 @@
                         <v-toolbar dark color="primary">
                             <v-toolbar-title>Creation événement</v-toolbar-title>
                         </v-toolbar>
-                        <form @submit.prevent="onClickCreateEvent">
+                        <form ref="creationEventForm" @submit.prevent="onClickCreateEvent">
                             <v-card-text>
-                                <v-container grid-list-md>
+                                <v-container grid-list-md pb-0>
                                     <v-layout wrap>
                                         <v-flex xs12 sm9 md9>
                                             <v-text-field
@@ -41,6 +41,9 @@
                                         <v-flex xs12 sm6 md6>
                                             <v-text-field
                                                 box
+                                                hide-details
+                                                readonly
+                                                browser-autocomplete="off"
                                                 label="Picture*"
                                                 v-validate="'required'"
                                                 name="pictureName"
@@ -155,12 +158,13 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" flat @click="reset">Reset</v-btn>
                                 <v-btn
                                     color="blue darken-1"
                                     flat
                                     @click="dialogCreation = false"
                                 >Close</v-btn>
-                                <v-btn color="blue darken-1" flat type="submit">Save</v-btn>
+                                <v-btn :loading="loadingBtn" color="blue darken-1" flat type="submit">Save</v-btn>
                             </v-card-actions>
                         </form>
                     </v-card>
@@ -197,15 +201,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Provide } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { IEvent, IEvents } from "../store/types";
+import { IEvent, IEvents, IUser } from "../store/types";
+import moment from "moment";
 
 @Component({
     $_veeValidate: { validator: "new" }
 })
 export default class Event extends Vue {
     @State("Events") events!: IEvents;
+    @State("User") user!: IUser;
 
     private dialogCreation: boolean = false;
     private title: string = "";
@@ -216,26 +222,44 @@ export default class Event extends Vue {
     private date: string = "";
     private timePicker: string = "";
     private time: string = "";
+    private loadingBtn: boolean = false;
 
     private imageFile: File | null = null;
+
+    $refs!: {
+        image: HTMLInputElement;
+        creationEventForm: HTMLFormElement;
+    };
 
     public created() {
         this.$store.dispatch("requestEvents");
     }
 
     public async onClickCreateEvent(ev: any): Promise<any> {
-        alert("test");
         if (await this.$validator.validate()) {
-            console.log("ImageFile", this.imageFile);
+            this.loadingBtn = true;
+            let response = await this.$store.dispatch("createEvent", {
+                title: this.title,
+                ticketsNumber: parseInt(this.tickets),
+                picture: this.pictureName,
+                description: this.description,
+                date: moment(this.date + this.time, "YYYY-MM-DD mm:ss"),
+                accountId: this.user.userId
+            } as IEvent);
+
+            console.log("Response create event", response);
+
+            this.loadingBtn = false;
+            this.dialogCreation = false;
         }
     }
 
     public onClose() {
         console.log("ONCLOSE");
     }
-    
-    $refs!: {
-        image: HTMLInputElement
+
+    public reset() {
+        this.$refs.creationEventForm.reset();
     }
 
     public pickFile() {

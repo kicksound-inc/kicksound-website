@@ -1,3 +1,4 @@
+import moment from "moment";
 /**
  * Interface
  */
@@ -52,6 +53,7 @@ export interface IEvent {
     description: string;
     ticketsNumber: number;
     picture: string;
+    date: moment.Moment;
     disabled: boolean;
     id: number;
     accountId: number;
