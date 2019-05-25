@@ -250,6 +250,7 @@ export default class Event extends Vue {
             console.log("Response create event", response);
 
             this.loadingBtn = false;
+            this.reset();
             this.dialogCreation = false;
         }
     }
