@@ -5,11 +5,17 @@ import { IDrawer } from "../types";
 export default class Drawer extends VuexModule implements IDrawer {
     public enableDesktop: boolean = true;
     public enableMobile: boolean = false;
+    public enableMini: boolean = false;
     public dark: boolean = false;
 
     @Mutation
     public switchDesktop() {
         this.enableDesktop = !this.enableDesktop;
+    }
+
+    @Mutation
+    public switchMini() {
+        this.enableMini = !this.enableMini;
     }
 
     @Mutation

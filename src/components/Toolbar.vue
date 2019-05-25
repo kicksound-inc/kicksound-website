@@ -71,7 +71,7 @@ export default class Toolbar extends Vue {
     private search: string | null = null;
 
     onClickDrawerDesktop(): void {
-        this.$store.commit("switchDesktop");
+        this.$store.commit("switchMini");
     }
 
     onClickDrawerMobile(): void {

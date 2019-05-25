@@ -9,6 +9,7 @@
         width="230"
         :dark="drawer.dark"
         app
+        :mini-variant="drawer.enableMini"
     >
         <v-list class="pt-0" dense>
             <v-list-tile to="/">
