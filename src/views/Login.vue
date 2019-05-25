@@ -75,28 +75,15 @@ export default class Login extends Vue {
 
     public async onClickLogin(ev: any): Promise<any> {
         console.log("Click login");
-
         if (await this.$validator.validate()) {
-            this.$store
-                .dispatch("login", {
-                    username: this.username,
-                    password: this.password
-                } as IUser)
-                .then(response => {
-                    console.log("onClickLogin response : ", response);
-                    this.$store.commit("setDrawerDesktop", true);
-                    this.$router.push({ name: "Home" });
-                })
-                .catch((error: Error) => {
-                    if (error instanceof HttpError)
-                        this.$store.commit("showSnackbar", {
-                            message:
-                                error.message[0].toUpperCase() +
-                                error.message.slice(1),
-                            color: TypeMessage.ERROR
-                        } as ISnackbar);
-                    else console.error(error);
-                });
+            const response = await this.$store.dispatch("login", {
+                username: this.username,
+                password: this.password
+            } as IUser);
+
+            console.log("onClickLogin response : ", response);
+            this.$store.commit("setDrawerDesktop", true);
+            this.$router.push({ name: "Home" });
         }
     }
 }

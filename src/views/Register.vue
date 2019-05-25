@@ -98,46 +98,23 @@ export default class Register extends Vue {
                     color: TypeMessage.ERROR
                 } as ISnackbar);
             } else {
-                this.$store
-                    .dispatch("register", {
-                        username: this.username,
-                        email: this.email,
-                        password: this.password
-                    } as IUser)
-                    .then(response => {
-                        console.log("onClickRegister : ", response);
-                        this.$store
-                            .dispatch("login", {
-                                username: this.username,
-                                password: this.password
-                            })
-                            .then(response => {
-                                console.log(
-                                    "OnLoginAfterRegister : ",
-                                    response
-                                );
-                                this.$store.commit("setDrawerDesktop", true);
-                                this.$router.push({ name: "Home" });
-                            })
-                            .catch(error => {
-                                this.onError(error);
-                            });
-                    })
-                    .catch(error => {
-                        this.onError(error);
-                    });
+                let response = await this.$store.dispatch("register", {
+                    username: this.username,
+                    email: this.email,
+                    password: this.password
+                } as IUser);
+
+                console.log("onClickRegister : ", response);
+                response = await this.$store.dispatch("login", {
+                    username: this.username,
+                    password: this.password
+                });
+
+                console.log("OnLoginAfterRegister : ", response);
+                this.$store.commit("setDrawerDesktop", true);
+                this.$router.push({ name: "Home" });
             }
         }
-    }
-
-    private onError(error: any) {
-        if (error instanceof HttpError)
-            this.$store.commit("showSnackbar", {
-                message:
-                    error.message[0].toUpperCase() + error.message.slice(1),
-                color: TypeMessage.ERROR
-            } as ISnackbar);
-        else console.error(error);
     }
 }
 </script>

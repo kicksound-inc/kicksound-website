@@ -59,7 +59,14 @@
 import Vue from "vue";
 import { Component, Watch } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
-import { IDrawer, IRootState, IUser } from "@/store/types";
+import {
+    IDrawer,
+    IRootState,
+    IUser,
+    TypeMessage,
+    ISnackbar
+} from "@/store/types";
+import { HttpError } from "@/store/errors";
 
 @Component
 export default class Toolbar extends Vue {
@@ -70,35 +77,28 @@ export default class Toolbar extends Vue {
 
     private search: string | null = null;
 
-    onClickDrawerDesktop(): void {
+    private onClickDrawerDesktop(): void {
         this.$store.commit("switchMini");
     }
 
-    onClickDrawerMobile(): void {
+    private onClickDrawerMobile(): void {
         this.$store.commit("switchMobile");
     }
 
-    onClickLogout() {
+    private async onClickLogout() {
         console.log("OnClickLogout");
-        this.$store
-            .dispatch("logout")
-            .then(response => {
-                console.log("Logout successful");
-                this.$router.push({ name: "Login" });
-            })
-            .catch(error => {
-                console.error("Logout error");
-            });
+        const response = await this.$store.dispatch("logout");
+        console.log("Logout successful");
+        this.$router.push({ name: "Login" });
     }
 
-    onClickSearch() {
+    private onClickSearch() {
         alert("Search : " + this.search);
     }
 
     @Watch("search")
-    onSearchChange(val: string, oldVal: string) {
+    private onSearchChange(val: string, oldVal: string) {
         console.log(val);
     }
-
 }
 </script>

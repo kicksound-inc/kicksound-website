@@ -21,8 +21,8 @@ export default class User extends VuexModule implements IUser {
                 password: payload.password,
             });
             console.log("Register Action", register);
+            return;
         } catch (err) {
-            console.error("Register Action", err.response);
             throw new HttpError(
                 err.response.data.error.message,
                 err.response.data.error.code
@@ -56,7 +56,7 @@ export default class User extends VuexModule implements IUser {
         }
     }
 
-    @Action({ commit: "clearUser"})
+    @Action({ commit: "clearUser", rawError: true})
     public async logout() {
         console.log("Logout mutation");
 
@@ -65,7 +65,10 @@ export default class User extends VuexModule implements IUser {
 
             return;
         } catch (err) {
-            console.error("Login Action", err);
+            throw new HttpError(
+                err.response.data.error.message,
+                err.response.data.error.code
+            );
         }
     }
 
