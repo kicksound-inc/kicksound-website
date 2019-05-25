@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Provide } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { State } from 'vuex-class';
 import { ILoading } from '../store/types';
 

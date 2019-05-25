@@ -34,7 +34,7 @@ html {
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Provide } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";

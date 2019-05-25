@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Provide } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { IUser, ISnackbar, TypeMessage } from "../store/types";
 import { HttpError } from "@/store/errors";
 
@@ -62,8 +62,8 @@ import { HttpError } from "@/store/errors";
     $_veeValidate: { validator: "new" }
 })
 export default class Login extends Vue {
-    @Provide() private username: string = "";
-    @Provide() private password: string = "";
+    private username: string = "";
+    private password: string = "";
 
     public created() {
         console.log("Login component created");

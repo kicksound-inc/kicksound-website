@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Model, Provide } from "vue-property-decorator";
+import { Component, Model } from "vue-property-decorator";
 import { IUser, ISnackbar, TypeMessage } from "../store/types";
 import { HttpError } from "@/store/errors";
 
@@ -75,10 +75,10 @@ import { HttpError } from "@/store/errors";
     $_veeValidate: { validator: "new" }
 })
 export default class Register extends Vue {
-    @Provide() private username: string = "";
-    @Provide() private email: string = "";
-    @Provide() private password: string = "";
-    @Provide() private passwordVerified: string = "";
+    private username: string = "";
+    private email: string = "";
+    private password: string = "";
+    private passwordVerified: string = "";
 
     public created() {
         console.log("Register component created");
