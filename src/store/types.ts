@@ -18,7 +18,7 @@ export interface IUser {
     token: string;
     firstname?: string;
     lastname?: string;
-    type?: number;
+    type: number;
     description?: string;
     realm?: string;
     username: string;
@@ -44,10 +44,6 @@ export interface ISnackbar {
     color: string;
 }
 
-export interface IEvents {
-    events: IEvent[];
-    loading: boolean;
-}
 export interface IEvent {
     title: string;
     description: string;

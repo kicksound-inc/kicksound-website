@@ -15,14 +15,14 @@ const router: Router = new Router({
             name: "Login",
             component: Login,
             beforeEnter: denyAuth,
-            meta: { enableFullScreenImage: true}
+            meta: { enableFullScreenImage: true }
         },
         {
             path: "/register",
             name: "Register",
             component: () => import("./views/Register.vue"),
             beforeEnter: denyAuth,
-            meta: { enableFullScreenImage: true}
+            meta: { enableFullScreenImage: true }
         },
         {
             path: "/",
@@ -40,7 +40,28 @@ const router: Router = new Router({
             path: "/events",
             name: "Events",
             component: () => import("./views/Events.vue"),
-            meta: { requireAuth: true }
+            meta: { requireAuth: true },
+            children: [
+                {
+                    path: "my",
+                    name: "MyEvents",
+                    component: () => import("./views/MyEvents.vue")
+                },
+                {
+                    path: "gestion",
+                    name: "GestionEvent",
+                    component: () => import("./views/GestionEvents.vue")
+                },
+                {
+                    path: "",
+                    component: () => import("./views/FollowsEvents.vue")
+                },
+            ]
+        },
+        {
+            path: "/event/:id",
+            meta: { requireAuth: true },
+            component: () => import("./views/Event.vue"),
         },
         {
             path: "/lives",

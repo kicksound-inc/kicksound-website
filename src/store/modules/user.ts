@@ -9,6 +9,7 @@ export default class User extends VuexModule implements IUser {
     public userId: number = 0;
     public token: string = "";
     public username: string = "";
+    public type: number = 0;
 
     @Action({ rawError: true })
     public async register(payload: IUser) {

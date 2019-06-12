@@ -4,14 +4,14 @@ import router from "./router";
 import store from "./store/store";
 import Vuetify from "vuetify/lib";
 import "vuetify/src/stylus/app.styl";
-import VeeValidate, { ValidationProvider } from "vee-validate";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { HttpError } from './store/errors';
-import { TypeMessage, ISnackbar } from './store/types';
+import VeeValidate from "vee-validate";
+import axios from "axios";
+import { HttpError } from "./store/errors";
+import { TypeMessage, ISnackbar } from "./store/types";
 
 Vue.config.productionTip = false;
 
-Vue.config.errorHandler = function (error, vm, info) {
+Vue.config.errorHandler = (error, vm, info) => {
     if (error instanceof HttpError) {
         store.commit("showSnackbar", {
             message:
@@ -33,6 +33,8 @@ Vue.use(Vuetify, {
 });
 
 Vue.use(VeeValidate, { inject: false });
+
+Vue.prototype.$http = axios;
 
 console.log("API_URL", process.env.VUE_APP_API_URL);
 

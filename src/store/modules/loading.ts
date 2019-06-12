@@ -8,6 +8,16 @@ export default class Loading extends VuexModule implements ILoading {
     public value: number = 0;
 
     @Mutation
+    public setLoadingEnable() {
+        this.enable = true;
+    }
+
+    @Mutation
+    public setLoadingDisable() {
+        this.enable = false;
+    }
+
+    @Mutation
     public setValue(value: number) {
         this.value = value;
     }
