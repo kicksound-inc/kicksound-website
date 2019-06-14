@@ -1,15 +1,31 @@
 <template>
     <v-layout wrap>
         <v-flex v-if="!events.length" class="text-xs-center">Il n'y a aucun événements</v-flex>
-        <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm9 md6 lg4>
-            <v-card to="/events">
-                <v-img :src="`http://localhost:3000/event/${event.picture}`" height="200px"></v-img>
+        <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm12 md6 lg3>
+            <v-card :to="`/event/${event.id}`">
+                <v-img
+                    :src="`http://localhost:3000/event/${event.picture}`"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    :aspect-ratio="16/9"
+                >
+                    <template v-slot:placeholder>
+                        <v-layout fill-height align-center justify-center ma-0>
+                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-layout>
+                    </template>
+                </v-img>
                 <v-card-title>
-                    {{event.title}}
-                    <v-spacer></v-spacer>
-                    {{readableDate(event.date)}}
+                    <v-container fluid class="pa-0 ma-0">
+                        <v-layout>
+                            <v-flex>
+                                <span class="subheading clamp">{{event.title}}</span>
+                            </v-flex>
+                            <v-flex shrink>
+                                <span class="time ml-1">{{readableDate(event.date)}}</span>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
                 </v-card-title>
-                <v-card-text>{{event.description}}</v-card-text>
             </v-card>
         </v-flex>
         <v-dialog v-model="dialogCreation" max-width="600px" @input="v => v || onClose()">
@@ -131,13 +147,13 @@
                                                 label="Time"
                                                 readonly
                                                 v-on="on"
-                                                v-validate="'required|date_format:hh:mm'"
+                                                v-validate="'required|date_format:kk:mm'"
                                                 name="time"
                                                 type="text"
                                                 :error-messages="errors.collect('time')"
                                             ></v-text-field>
                                         </template>
-                                        <v-time-picker v-model="time" no-title scrollable>
+                                        <v-time-picker v-model="time" format="24hr" no-title scrollable>
                                             <v-spacer></v-spacer>
                                             <v-btn
                                                 flat
@@ -179,6 +195,15 @@
 </template>
 
 <style scoped>
+.time {
+    white-space: nowrap;
+}
+.clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 </style>
 
 <script lang="ts">
@@ -186,7 +211,6 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { IEvent, IUser } from "../store/types";
-import moment from "moment";
 
 @Component({
     $_veeValidate: { validator: "new" }
@@ -234,12 +258,15 @@ export default class GestionEvents extends Vue {
             this.loadingBtn = true;
             try {
                 this.$store.commit("setLoadingEnable");
+                console.log("DEBUG :", this.date + this.time);
+                console.log("DEBUG :", this.$moment(this.date + " " + this.time))
+
                 let response = await this.$http.post(`/Events/`, {
                     title: this.title,
                     ticketsNumber: parseInt(this.tickets),
                     picture: this.pictureName,
                     description: this.description,
-                    date: moment(this.date + this.time, "YYYY-MM-DD mm:ss"),
+                    date: this.$moment(this.date + " " + this.time),
                     accountId: this.user.userId
                 } as IEvent);
                 this.events.push(response.data as IEvent);
@@ -250,13 +277,16 @@ export default class GestionEvents extends Vue {
                 console.log("YO", this.imageFile);
                 formData.append("file", this.imageFile as File);
 
-                response = await this.$http.post(`/Photos/event/upload`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
+                response = await this.$http.post(
+                    `/Photos/event/upload`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
                     }
-                });
+                );
                 console.log("Upload file", response.data);
-
             } catch (err) {
                 throw new Error(err);
             } finally {
@@ -286,7 +316,7 @@ export default class GestionEvents extends Vue {
     }
 
     public readableDate(date: string): string {
-        return moment(date).fromNow();
+        return this.$moment(date).fromNow();
     }
 
     public pickFile() {

@@ -8,6 +8,11 @@ import VeeValidate from "vee-validate";
 import axios from "axios";
 import { HttpError } from "./store/errors";
 import { TypeMessage, ISnackbar } from "./store/types";
+import moment from "moment-timezone";
+
+/**
+ * Vue Configuration
+ */
 
 Vue.config.productionTip = false;
 
@@ -34,9 +39,9 @@ Vue.use(Vuetify, {
 
 Vue.use(VeeValidate, { inject: false });
 
-Vue.prototype.$http = axios;
-
-console.log("API_URL", process.env.VUE_APP_API_URL);
+/**
+ * Axios configuration
+ */
 
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.headers.common["Authorization"] = store.getters.getToken;
@@ -48,7 +53,21 @@ axios.interceptors.response.use((config) => {
     const err: Error = error.response.data.error;
     console.error("Axios error", err);
     return Promise.reject(error);
-})
+});
+
+/**
+ * Moment configuration
+ */
+
+moment.locale(window.navigator.language || "en");
+moment.tz(moment.tz.guess());
+
+/**
+ * Vue global variable
+ */
+
+Vue.prototype.$http = axios;
+Vue.prototype.$moment = moment;
 
 new Vue({
     router,
