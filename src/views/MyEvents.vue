@@ -48,6 +48,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { IEvent, IUser } from "../store/types";
+import moment from "moment-timezone";
 
 @Component
 export default class MyEvents extends Vue {
@@ -71,7 +72,7 @@ export default class MyEvents extends Vue {
     }
 
     public readableDate(date: string): string {
-        return this.$moment(date).fromNow();
+        return moment(date).fromNow();
     }
 }
 </script>

@@ -16,6 +16,7 @@
                 <h1 class="display-2 font-weight-thin mb-3">{{event.title}}</h1>
             </v-layout>
             <v-layout column justify-center wrap>
+                <v-flex><v-btn @click="participate">Participer</v-btn></v-flex>
                 <v-flex>Créé par {{event.id}}</v-flex>
                 <v-flex>Evenement le {{readableDate(event.date)}}</v-flex>
                 <v-flex>Places : {{event.ticketsNumber}}</v-flex>
@@ -31,11 +32,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { IEvent, ILoading } from "../store/types";
+import { IEvent, ILoading, IUser } from "../store/types";
 import { State } from "vuex-class";
+import moment from "moment-timezone";
 
 @Component
 export default class Event extends Vue {
+    @State("User") user!: IUser;
     @State("Loading") loading!: ILoading;
 
     public event!: IEvent;
@@ -44,10 +47,17 @@ export default class Event extends Vue {
     public async created() {
         try {
             this.$store.commit("setLoadingEnable");
-            const { data } = await this.$http.get(
+
+            let events = await this.$http.get(
                 `/Events/${this.$route.params.id}`
             );
-            this.event = data;
+
+            let participants = await this.$http.get(
+                `/Events/${this.$route.params.id}/participants`
+            )
+
+            this.event = events.data;
+            this.participants = participants.data;
         } catch (err) {
             throw new Error(err);
         } finally {
@@ -56,7 +66,17 @@ export default class Event extends Vue {
     }
 
     public readableDate(date: string): string {
-        return this.$moment(date).format("LLLL");
+        return moment(date).format("LLLL");
+    }
+
+    public participate(ev: any) {
+        this.$http.post(
+            `/Events/${this.$route.params.id}/tickets`,
+            {
+                accountId: this.user.userId,
+                price: 0
+            }
+        );
     }
 }
 </script>

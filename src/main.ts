@@ -57,6 +57,7 @@ axios.interceptors.response.use((config) => {
 
 /**
  * Moment configuration
+ * Moment ne peut pas être une variable global car il a un constructor
  */
 
 moment.locale(window.navigator.language || "en");
@@ -67,7 +68,6 @@ moment.tz(moment.tz.guess());
  */
 
 Vue.prototype.$http = axios;
-Vue.prototype.$moment = moment;
 
 new Vue({
     router,

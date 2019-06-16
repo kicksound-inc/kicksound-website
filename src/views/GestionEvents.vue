@@ -211,6 +211,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { IEvent, IUser } from "../store/types";
+import moment from "moment-timezone";
 
 @Component({
     $_veeValidate: { validator: "new" }
@@ -259,14 +260,14 @@ export default class GestionEvents extends Vue {
             try {
                 this.$store.commit("setLoadingEnable");
                 console.log("DEBUG :", this.date + this.time);
-                console.log("DEBUG :", this.$moment(this.date + " " + this.time))
+                console.log("DEBUG :", moment(this.date + " " + this.time))
 
                 let response = await this.$http.post(`/Events/`, {
                     title: this.title,
                     ticketsNumber: parseInt(this.tickets),
                     picture: this.pictureName,
                     description: this.description,
-                    date: this.$moment(this.date + " " + this.time),
+                    date: moment(this.date + " " + this.time),
                     accountId: this.user.userId
                 } as IEvent);
                 this.events.push(response.data as IEvent);
@@ -316,7 +317,7 @@ export default class GestionEvents extends Vue {
     }
 
     public readableDate(date: string): string {
-        return this.$moment(date).fromNow();
+        return moment(date).fromNow();
     }
 
     public pickFile() {
