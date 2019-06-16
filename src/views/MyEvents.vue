@@ -59,7 +59,7 @@ export default class MyEvents extends Vue {
     public async created() {
         try {
             this.$store.commit("setLoadingEnable");
-            const events = await this.$http.get(
+            const events = await this.$http.get<Array<IEvent>>(
                 `/accounts/${this.user.userId}/eventParticipation`
             );
             console.log("MyEvents", events);

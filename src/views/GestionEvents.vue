@@ -242,7 +242,7 @@ export default class GestionEvents extends Vue {
     public async created() {
         try {
             this.$store.commit("setLoadingEnable");
-            const events = await this.$http.get(
+            const events = await this.$http.get<Array<IEvent>>(
                 `/accounts/${this.user.userId}/events`
             );
             console.log("GestionEvents", events);

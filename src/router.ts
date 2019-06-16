@@ -64,6 +64,11 @@ const router: Router = new Router({
             component: () => import("./views/Event.vue"),
         },
         {
+            path: "/user/:id",
+            meta: { requireAuth: true },
+            component: () => import("./views/User.vue"),
+        },
+        {
             path: "/lives",
             name: "Lives",
             component: () => import("./views/Lives.vue"),
