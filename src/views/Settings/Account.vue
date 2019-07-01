@@ -65,13 +65,26 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { State } from 'vuex-class';
+import { IUser } from '../../store/types';
 
 @Component
 export default class Account extends Vue {
-    private username: string = "";
-    private email: string = "";
-    private description: string = "";
-    private firstname: string = "";
-    private lastname: string = "";
+
+    @State("User") user!: IUser;
+
+    private username!: string;
+    private email!: string;
+    private description?: string;
+    private firstname?: string;
+    private lastname?: string;
+
+    public async created() {
+        this.username = this.user.username;
+        this.email = this.user.email;
+        this.description = this.user.description;
+        this.firstname = this.user.firstname;
+        this.lastname = this.user.lastname;
+    }
 }
 </script>

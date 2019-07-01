@@ -23,7 +23,7 @@ export interface IUser {
     realm?: string;
     username: string;
     password?: string;
-    email?: string;
+    email: string;
     emailVerified?: true;
 }
 
