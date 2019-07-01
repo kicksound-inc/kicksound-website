@@ -36,7 +36,7 @@
             </v-form>
             <v-spacer></v-spacer>
             <v-toolbar-items v-if="isAuthenticated" class="hidden-xs-only">
-                <v-btn flat>{{ user.username }}</v-btn>
+                <v-btn flat to="/settings">{{ user.username }}</v-btn>
                 <v-btn flat @click="onClickLogout">Logout</v-btn>
             </v-toolbar-items>
             <v-toolbar-side-icon class="hidden-sm-and-up" @click="onClickDrawerMobile"></v-toolbar-side-icon>

@@ -69,7 +69,6 @@
 import Vue from "vue";
 import { Component, Model } from "vue-property-decorator";
 import { IUser, ISnackbar, TypeMessage } from "../store/types";
-import { HttpError } from "@/store/errors";
 
 @Component({
     $_veeValidate: { validator: "new" }
@@ -88,7 +87,7 @@ export default class Register extends Vue {
         console.log("Register component destroyed");
     }
 
-    public async onClickRegister(ev: any): Promise<any> {
+    public async onClickRegister(ev: any): Promise<void> {
         console.log("Click Register");
         if (await this.$validator.validate()) {
             if (this.password !== this.passwordVerified) {

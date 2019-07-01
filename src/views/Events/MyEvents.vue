@@ -4,7 +4,7 @@
         <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm12 md6 lg3>
             <v-card :to="`/event/${event.id}`">
                 <v-img
-                    :src="`http://localhost:3000/event/${event.picture}`"
+                    :src="`http://localhost:3000/image/${event.picture}`"
                     lazy-src="https://picsum.photos/10/6?image=15"
                     :aspect-ratio="16/9"
                 >
@@ -47,7 +47,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { IEvent, IUser } from "../store/types";
+import { IEvent, IUser } from "@/store/types";
 import moment from "moment-timezone";
 
 @Component
@@ -56,7 +56,7 @@ export default class MyEvents extends Vue {
 
     public events: IEvent[] = [];
 
-    public async created() {
+    public async created(): Promise<void> {
         try {
             this.$store.commit("setLoadingEnable");
             const events = await this.$http.get<Array<IEvent>>(
@@ -65,7 +65,7 @@ export default class MyEvents extends Vue {
             console.log("MyEvents", events);
             this.events = events.data;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         } finally {
             this.$store.commit("setLoadingDisable");
         }

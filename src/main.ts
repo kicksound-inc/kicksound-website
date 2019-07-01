@@ -25,7 +25,7 @@ Vue.config.errorHandler = (error, vm, info) => {
             color: TypeMessage.ERROR
         } as ISnackbar);
     } else {
-        console.error("Global Error : ", error, vm, info);
+        console.error("Vue =>", error, vm, info);
         store.commit("showSnackbar", {
             message: "Something went wrong, contact admin",
             color: TypeMessage.ERROR
@@ -46,13 +46,17 @@ Vue.use(VeeValidate, { inject: false });
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.headers.common["Authorization"] = store.getters.getToken;
 
-axios.interceptors.response.use((config) => {
-    return config;
+axios.interceptors.response.use((response) => {
+    return response;
 }, (error: any) => {
-
-    const err: Error = error.response.data.error;
-    console.error("Axios error", err);
-    return Promise.reject(error);
+    const err: HttpError = new HttpError(
+        error.response.data.error.message,
+        error.response.data.error.code,
+        error.response.status,
+        error.response.statusText
+    );
+    console.error("Axios =>", err);
+    return Promise.reject(err);
 });
 
 /**

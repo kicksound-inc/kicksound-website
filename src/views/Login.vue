@@ -56,7 +56,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { IUser, ISnackbar, TypeMessage } from "../store/types";
-import { HttpError } from "@/store/errors";
+import { HttpError } from "../store/errors";
 
 @Component({
     $_veeValidate: { validator: "new" }
@@ -73,7 +73,7 @@ export default class Login extends Vue {
         console.log("Login component destroyed");
     }
 
-    public async onClickLogin(ev: any): Promise<any> {
+    public async onClickLogin(ev: any): Promise<void> {
         console.log("Click login");
         if (await this.$validator.validate()) {
             const response = await this.$store.dispatch("login", {

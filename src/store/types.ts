@@ -25,7 +25,6 @@ export interface IUser {
     password?: string;
     email?: string;
     emailVerified?: true;
-    id?: number;
 }
 
 export interface IDrawerItem {

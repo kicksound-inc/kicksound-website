@@ -39,29 +39,29 @@ const router: Router = new Router({
         {
             path: "/events",
             name: "Events",
-            component: () => import("./views/Events.vue"),
+            component: () => import("./views/Events/Events.vue"),
             meta: { requireAuth: true },
             children: [
                 {
                     path: "my",
                     name: "MyEvents",
-                    component: () => import("./views/MyEvents.vue")
+                    component: () => import("./views/Events/MyEvents.vue")
                 },
                 {
                     path: "gestion",
                     name: "GestionEvent",
-                    component: () => import("./views/GestionEvents.vue")
+                    component: () => import("./views/Events/GestionEvents.vue")
                 },
                 {
                     path: "",
-                    component: () => import("./views/FollowsEvents.vue")
+                    component: () => import("./views/Events/FollowsEvents.vue")
                 },
             ]
         },
         {
             path: "/event/:id",
             meta: { requireAuth: true },
-            component: () => import("./views/Event.vue"),
+            component: () => import("./views/Events/Event.vue"),
         },
         {
             path: "/user/:id",
@@ -73,6 +73,25 @@ const router: Router = new Router({
             name: "Lives",
             component: () => import("./views/Lives.vue"),
             meta: { requireAuth: true }
+        },
+        {
+            path: "/settings",
+            redirect: "/settings/account",
+            name: "Settings",
+            component: () => import("./views/Settings/Settings.vue"),
+            meta: { requireAuth: true },
+            children: [
+                {
+                    path: "account",
+                    name: "Account",
+                    component: () => import("./views/Settings/Account.vue")
+                },
+                {
+                    path: "password",
+                    name: "Password",
+                    component: () => import("./views/Settings/Password.vue")
+                }
+            ]
         },
         {
             path: "*",

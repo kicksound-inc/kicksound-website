@@ -10,6 +10,9 @@ export default class User extends VuexModule implements IUser {
     public token: string = "";
     public username: string = "";
     public type: number = 0;
+    public firstname: string = "";
+    public lastname: string = "";
+    public description: string = "";
 
     @Action({ rawError: true })
     public async register(payload: IUser) {
@@ -24,10 +27,7 @@ export default class User extends VuexModule implements IUser {
             console.log("Register Action", register);
             return;
         } catch (err) {
-            throw new HttpError(
-                err.response.data.error.message,
-                err.response.data.error.code
-            );
+            throw err;
         }
     }
 
@@ -50,10 +50,7 @@ export default class User extends VuexModule implements IUser {
                 username: payload.username,
             } as IUser;
         } catch (err) {
-            throw new HttpError(
-                err.response.data.error.message,
-                err.response.data.error.code
-            );
+            throw err;
         }
     }
 
@@ -66,10 +63,7 @@ export default class User extends VuexModule implements IUser {
 
             return;
         } catch (err) {
-            throw new HttpError(
-                err.response.data.error.message,
-                err.response.data.error.code
-            );
+            throw err;
         }
     }
 

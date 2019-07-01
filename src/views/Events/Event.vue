@@ -1,7 +1,7 @@
 <template>
     <div v-if="!loading.enable">
         <v-img
-            :src="`http://localhost:3000/event/${event.picture}`"
+            :src="`http://localhost:3000/image/${event.picture}`"
             lazy-src="https://picsum.photos/10/6?image=15"
             max-height="500"
         >
@@ -35,10 +35,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { IEvent, ILoading, IUser } from "../store/types";
+import { IEvent, ILoading, IUser } from "@/store/types";
 import { State } from "vuex-class";
 import moment from "moment-timezone";
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
 
 @Component
 export default class Event extends Vue {
@@ -49,7 +49,7 @@ export default class Event extends Vue {
     public participants!: any;
     public alreadyJoin: boolean = false;
 
-    public async created() {
+    public async created(): Promise<void> {
         try {
             this.$store.commit("setLoadingEnable");
 
@@ -63,34 +63,40 @@ export default class Event extends Vue {
             this.participants = participants.data;
             this.alreadyJoin = gotTicket;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         } finally {
             this.$store.commit("setLoadingDisable");
         }
     }
 
-    public async getEvent(): Promise<AxiosResponse> {
+    public async getEvent(): Promise<AxiosResponse<IEvent>> {
         try {
-            return await this.$http.get<IEvent>(`/Events/${this.$route.params.id}`);
+            return await this.$http.get<IEvent>(
+                `/Events/${this.$route.params.id}`
+            );
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
-    public async getParticipants(): Promise<AxiosResponse> {
+    public async getParticipants(): Promise<AxiosResponse<any>> {
         try {
-            return await this.$http.get(`/Events/${this.$route.params.id}/participants`);
+            return await this.$http.get<any>(
+                `/Events/${this.$route.params.id}/participants`
+            );
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
     public async getTicketForEvent(): Promise<boolean> {
         try {
-            const { data } = await this.$http.get<Array<Object>>(`/accounts/${this.user.userId}/events/${this.$route.params.id}/tickets`);
+            const { data } = await this.$http.get<Array<Object>>(
+                `/accounts/${this.user.userId}/events/${this.$route.params.id}/tickets`
+            );
             return data.length == 0 ? false : true;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -100,14 +106,14 @@ export default class Event extends Vue {
 
     public async join(ev: any): Promise<void> {
         try {
-            await this.$http.post(`/Events/${this.$route.params.id}/tickets`, {
+            await this.$http.post<any>(`/Events/${this.$route.params.id}/tickets`, {
                 accountId: this.user.userId,
                 price: 0
             });
 
             this.alreadyJoin = true;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -124,7 +130,7 @@ export default class Event extends Vue {
 
             this.alreadyJoin = false;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

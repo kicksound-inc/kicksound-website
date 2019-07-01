@@ -4,7 +4,7 @@
         <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm12 md6 lg3>
             <v-card :to="`/event/${event.id}`">
                 <v-img
-                    :src="`http://localhost:3000/event/${event.picture}`"
+                    :src="`http://localhost:3000/image/${event.picture}`"
                     lazy-src="https://picsum.photos/10/6?image=15"
                     :aspect-ratio="16/9"
                 >
@@ -184,9 +184,9 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click="reset">Reset</v-btn>
-                        <v-btn color="blue darken-1" flat @click="dialogCreation = false">Close</v-btn>
-                        <v-btn :loading="loadingBtn" color="blue darken-1" flat type="submit">Save</v-btn>
+                        <v-btn outline color="blue darken-1" flat @click="reset">Reset</v-btn>
+                        <v-btn outline color="blue darken-1" flat @click="dialogCreation = false">Close</v-btn>
+                        <v-btn outline :loading="loadingBtn" color="blue darken-1" flat type="submit">Save</v-btn>
                     </v-card-actions>
                 </form>
             </v-card>
@@ -210,7 +210,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { IEvent, IUser } from "../store/types";
+import { IEvent, IUser } from "@/store/types";
 import moment from "moment-timezone";
 
 @Component({
@@ -239,7 +239,7 @@ export default class GestionEvents extends Vue {
         creationEventForm: HTMLFormElement;
     };
 
-    public async created() {
+    public async created(): Promise<void> {
         try {
             this.$store.commit("setLoadingEnable");
             const events = await this.$http.get<Array<IEvent>>(
@@ -248,13 +248,13 @@ export default class GestionEvents extends Vue {
             console.log("GestionEvents", events);
             this.events = events.data;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         } finally {
             this.$store.commit("setLoadingDisable");
         }
     }
 
-    public async onClickCreateEvent(ev: any): Promise<any> {
+    public async onClickCreateEvent(ev: any): Promise<void> {
         if (await this.$validator.validate()) {
             this.loadingBtn = true;
             try {
@@ -262,7 +262,7 @@ export default class GestionEvents extends Vue {
                 console.log("DEBUG :", this.date + this.time);
                 console.log("DEBUG :", moment(this.date + " " + this.time))
 
-                let response = await this.$http.post(`/Events/`, {
+                let response = await this.$http.post<any>(`/Events/`, {
                     title: this.title,
                     ticketsNumber: parseInt(this.tickets),
                     picture: this.pictureName,
@@ -278,8 +278,8 @@ export default class GestionEvents extends Vue {
                 console.log("YO", this.imageFile);
                 formData.append("file", this.imageFile as File);
 
-                response = await this.$http.post(
-                    `/Photos/event/upload`,
+                response = await this.$http.post<any>(
+                    `/Photos/image/upload`,
                     formData,
                     {
                         headers: {
@@ -289,7 +289,7 @@ export default class GestionEvents extends Vue {
                 );
                 console.log("Upload file", response.data);
             } catch (err) {
-                throw new Error(err);
+                throw err;
             } finally {
                 this.loadingBtn = false;
                 this.reset();
@@ -299,11 +299,11 @@ export default class GestionEvents extends Vue {
         }
     }
 
-    public onClose() {
+    public onClose(): void {
         console.log("ONCLOSE");
     }
 
-    public reset() {
+    public reset(): void {
         this.title = "";
         this.tickets = "";
         this.pictureName = "";
@@ -320,11 +320,11 @@ export default class GestionEvents extends Vue {
         return moment(date).fromNow();
     }
 
-    public pickFile() {
+    public pickFile(): void {
         this.$refs.image.click();
     }
 
-    public onFilePicked(evt: any) {
+    public onFilePicked(evt: any): void {
         const files = evt.target.files;
         if (files[0] !== undefined) {
             this.pictureName = files[0].name;

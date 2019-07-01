@@ -26,7 +26,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { IEvent, IUser } from "../store/types";
+import { IEvent, IUser } from "@/store/types";
 
 @Component
 export default class Events extends Vue {
