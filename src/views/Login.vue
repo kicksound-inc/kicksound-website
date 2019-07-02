@@ -81,6 +81,8 @@ export default class Login extends Vue {
                 password: this.password
             } as IUser);
 
+            this.$store.dispatch("getUser");
+
             console.log("onClickLogin response : ", response);
             this.$store.commit("setDrawerDesktop", true);
             this.$router.push({ name: "Home" });

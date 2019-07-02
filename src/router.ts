@@ -49,11 +49,12 @@ const router: Router = new Router({
                 },
                 {
                     path: "gestion",
-                    name: "GestionEvent",
+                    name: "GestionEvents",
                     component: () => import("./views/Events/GestionEvents.vue")
                 },
                 {
                     path: "",
+                    name: "FollowsEvents",
                     component: () => import("./views/Events/FollowsEvents.vue")
                 },
             ]

@@ -18,7 +18,7 @@ export interface IUser {
     token: string;
     firstname?: string;
     lastname?: string;
-    type: number;
+    type: TypeUser;
     description?: string;
     realm?: string;
     username: string;
@@ -67,4 +67,11 @@ export enum TypeMessage {
     INFO = "info",
     ERROR = "error",
     SUCCESS = "success"
+}
+
+export enum TypeUser {
+    USER = 0,
+    UNKNOWN_ARTIST = 1,
+    KNOWN_ARTIST = 2,
+    ADMIN = 3
 }

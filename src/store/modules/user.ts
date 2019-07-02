@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { IUser } from "../types";
+import { IUser, TypeUser } from "../types";
 import { HttpError } from "@/store/errors";
 import axios from "axios";
 
@@ -10,7 +10,7 @@ export default class User extends VuexModule implements IUser {
     public token: string = "";
     public firstname?: string;
     public lastname?: string;
-    public type: number = 0;
+    public type: TypeUser = 0;
     public description?: string;
     public realm?: string;
     public username: string = "";
@@ -18,7 +18,7 @@ export default class User extends VuexModule implements IUser {
     public emailVerified?: true;
 
     @Action({ rawError: true })
-    public async register(payload: IUser) {
+    public async register(payload: IUser): Promise<void> {
         console.log("Register mutation");
 
         try {
@@ -28,14 +28,13 @@ export default class User extends VuexModule implements IUser {
                 password: payload.password,
             });
             console.log("Register Action", register);
-            return;
         } catch (err) {
             throw err;
         }
     }
 
-    @Action({ commit: "setUser", rawError: true })
-    public async login(payload: IUser) {
+    @Action({ commit: "setAuthInformation", rawError: true })
+    public async login(payload: IUser): Promise<IUser> {
         console.log("Login mutation");
 
         try {
@@ -57,28 +56,47 @@ export default class User extends VuexModule implements IUser {
         }
     }
 
+    @Action({ commit: "setUser", rawError: true })
+    public async getUser(): Promise<IUser> {
+        try {
+            const user = await axios.get<IUser>(`/accounts/${this.userId}`);
+            return user.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     @Action({ commit: "clearUser", rawError: true})
-    public async logout() {
+    public async logout(): Promise<void> {
         console.log("Logout mutation");
 
         try {
             await axios.post("/accounts/logout");
-
-            return;
         } catch (err) {
             throw err;
         }
     }
 
     @Mutation
-    public setUser(user: IUser) {
+    public setAuthInformation(user: IUser): void {
         this.userId = user.userId;
         this.token = user.token;
         this.username = user.username;
     }
 
     @Mutation
-    public clearUser() {
+    public setUser(user: IUser): void {
+        this.firstname = user.firstname,
+        this.lastname = user.lastname,
+        this.type = user.type,
+        this.description = user.description,
+        this.realm = user.realm,
+        this.email = user.email,
+        this.emailVerified = user.emailVerified;
+    }
+
+    @Mutation
+    public clearUser(): void {
         this.userId = 0;
         this.token = "";
         this.username = "";
@@ -88,11 +106,18 @@ export default class User extends VuexModule implements IUser {
         return !!this.token;
     }
 
-    get getToken(): string | undefined {
-        return this.token;
-    }
-
-    get getUserId(): number | undefined {
-        return this.userId;
+    get user(): IUser {
+        return {
+            userId: this.userId,
+            token: this.token,
+            firstname: this.firstname,
+            lastname: this.lastname,
+            type: this.type,
+            description: this.description,
+            realm: this.realm,
+            username: this.username,
+            email: this.email,
+            emailVerified: this.emailVerified
+        };
     }
 }

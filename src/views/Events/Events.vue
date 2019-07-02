@@ -8,8 +8,8 @@
                 <v-divider vertical></v-divider>
                 <v-btn flat exact to="/events/my">Mes événements</v-btn>
                 <v-divider vertical></v-divider>
-                <v-btn v-if="!user.type" flat exact to="/events/gestion">Gérer</v-btn>
-                <v-divider vertical></v-divider>
+                <v-btn v-if="user.type" flat exact to="/events/gestion">Gérer</v-btn>
+                <v-divider v-if="user.type" vertical></v-divider>
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>

@@ -210,11 +210,22 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { IEvent, IUser } from "@/store/types";
+import { IEvent, IUser, TypeUser } from "@/store/types";
 import moment from "moment-timezone";
+import store from "@/store/store";
 
 @Component({
-    $_veeValidate: { validator: "new" }
+    $_veeValidate: { validator: "new" },
+    beforeRouteEnter: (to, from, next) => {
+        if(store.getters.user.type != TypeUser.USER) {
+            next();
+        } else {
+            console.log("FROM", from);
+            next({
+                name: from.name ? from.name : "Home"
+            })
+        }
+    }
 })
 export default class GestionEvents extends Vue {
     @State("User") user!: IUser;

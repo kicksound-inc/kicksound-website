@@ -38,8 +38,8 @@ import { Component } from "vue-property-decorator";
 import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
-import { State } from "vuex-class";
-import { ISnackbar } from './store/types';
+import { State, Getter } from "vuex-class";
+import { ISnackbar, IUser } from './store/types';
 import Loading from "@/components/Loading.vue";
 
 @Component({
@@ -53,9 +53,13 @@ import Loading from "@/components/Loading.vue";
 export default class App extends Vue {
 
     @State("Snackbar") snackbar!: ISnackbar;
+    @Getter("isAuthenticated") isAuthenticated!: boolean;
 
     public created() {
         console.log("App component created");
+
+        if(this.isAuthenticated)
+            this.$store.dispatch("getUser");
     }
 
     public destroyed() {

@@ -44,7 +44,7 @@ Vue.use(VeeValidate, { inject: false });
  */
 
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
-axios.defaults.headers.common["Authorization"] = store.getters.getToken;
+axios.defaults.headers.common["Authorization"] = store.getters.user.token;
 
 axios.interceptors.response.use((response) => {
     return response;
