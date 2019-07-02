@@ -249,9 +249,9 @@ export default class GestionEvents extends Vue {
             this.events = events.data;
         } catch (err) {
             throw err;
-        } finally {
-            this.$store.commit("setLoadingDisable");
         }
+        
+        this.$store.commit("setLoadingDisable");
     }
 
     public async onClickCreateEvent(ev: any): Promise<void> {
@@ -294,8 +294,9 @@ export default class GestionEvents extends Vue {
                 this.loadingBtn = false;
                 this.reset();
                 this.dialogCreation = false;
-                this.$store.commit("setLoadingDisable");
             }
+            
+            this.$store.commit("setLoadingDisable");
         }
     }
 

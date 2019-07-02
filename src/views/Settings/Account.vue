@@ -1,5 +1,5 @@
 <template>
-    <v-layout align-center column>
+    <v-layout v-if="!loading.enable" align-center column>
         <v-flex class="text-xs-center">
             <v-avatar size="150">
                 <img src="https://www.w3schools.com/howto/img_avatar.png" />
@@ -66,11 +66,11 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from 'vuex-class';
-import { IUser } from '../../store/types';
+import { IUser, ILoading } from '../../store/types';
 
 @Component
 export default class Account extends Vue {
-
+    @State("Loading") loading!: ILoading;
     @State("User") user!: IUser;
 
     private username!: string;
@@ -80,11 +80,21 @@ export default class Account extends Vue {
     private lastname?: string;
 
     public async created() {
-        this.username = this.user.username;
-        this.email = this.user.email;
-        this.description = this.user.description;
-        this.firstname = this.user.firstname;
-        this.lastname = this.user.lastname;
+        try {
+            this.$store.commit("setLoadingEnable");
+
+            const { data } = await this.$http.get<IUser>(`/accounts/${this.user.userId}`);
+
+            this.username = data.username;
+            this.email = data.email;
+            this.description = data.description;
+            this.firstname = data.firstname;
+            this.lastname = data.lastname;
+        } catch (err) {
+            throw err;
+        } 
+
+        this.$store.commit("setLoadingDisable");
     }
 }
 </script>

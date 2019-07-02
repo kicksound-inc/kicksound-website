@@ -66,9 +66,9 @@ export default class MyEvents extends Vue {
             this.events = events.data;
         } catch (err) {
             throw err;
-        } finally {
-            this.$store.commit("setLoadingDisable");
         }
+        
+        this.$store.commit("setLoadingDisable");
     }
 
     public readableDate(date: string): string {

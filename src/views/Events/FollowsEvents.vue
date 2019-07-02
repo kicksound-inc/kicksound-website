@@ -61,15 +61,15 @@ export default class FollowsEvents extends Vue {
         try {
             this.$store.commit("setLoadingEnable");
             const events = await this.$http.get<Array<IEvent>>(
-                `/accounts/${this.user.userId}/events`
+                `/accounts/${this.user.userId}/eventByFollowedUser`
             );
             console.log("FollowsEvent", events);
             this.events = events.data;
         } catch (err) {
             throw err;
-        } finally {
-            this.$store.commit("setLoadingDisable");
         }
+        
+        this.$store.commit("setLoadingDisable");
     }
 
     public readableDate(date: string): string {

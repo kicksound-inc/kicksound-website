@@ -47,9 +47,9 @@ export default class User extends Vue {
             this.alreadyFollow = alreadyFollowing;
         } catch (err) {
             throw err;
-        } finally {
-            this.$store.commit("setLoadingDisable");
         }
+        
+        this.$store.commit("setLoadingDisable");
     }
 
     public async getUser(): Promise<AxiosResponse<IUser>> {

@@ -8,11 +8,14 @@ export default class User extends VuexModule implements IUser {
 
     public userId: number = 0;
     public token: string = "";
-    public username: string = "";
+    public firstname?: string;
+    public lastname?: string;
     public type: number = 0;
-    public firstname: string = "";
-    public lastname: string = "";
-    public description: string = "";
+    public description?: string;
+    public realm?: string;
+    public username: string = "";
+    public email: string = "";
+    public emailVerified?: true;
 
     @Action({ rawError: true })
     public async register(payload: IUser) {
@@ -85,11 +88,11 @@ export default class User extends VuexModule implements IUser {
         return !!this.token;
     }
 
-    get getToken(): string {
+    get getToken(): string | undefined {
         return this.token;
     }
 
-    get getUserId(): number {
+    get getUserId(): number | undefined {
         return this.userId;
     }
 }

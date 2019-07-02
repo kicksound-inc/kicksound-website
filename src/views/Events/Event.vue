@@ -64,9 +64,9 @@ export default class Event extends Vue {
             this.alreadyJoin = gotTicket;
         } catch (err) {
             throw err;
-        } finally {
-            this.$store.commit("setLoadingDisable");
         }
+        
+        this.$store.commit("setLoadingDisable");
     }
 
     public async getEvent(): Promise<AxiosResponse<IEvent>> {
