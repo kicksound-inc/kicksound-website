@@ -1,55 +1,65 @@
 <template>
-    <v-layout v-if="!loading.enable" align-center column>
+    <v-layout align-center column>
         <v-flex class="text-xs-center">
             <v-avatar size="150">
                 <img src="https://www.w3schools.com/howto/img_avatar.png" />
             </v-avatar>
-            <h1>FGOUARIN</h1>
+            <h1>{{user.username.toUpperCase()}}</h1>
         </v-flex>
         <v-flex mt-4 id="flexForm">
             <v-form>
                 <v-text-field
                     box
+                    v-validate="'required|min:4|max:12'"
                     prepend-icon="person"
                     name="username"
                     label="Username"
                     type="text"
-                    v-model="username"
+                    v-model="user.username"
+                    :error-messages="errors.collect('username')"
                 ></v-text-field>
                 <v-text-field
                     box
-                    prepend-icon="person"
-                    name="firstname"
-                    label="Firstname"
-                    type="text"
-                    v-model="firstname"
-                ></v-text-field>
-                <v-text-field
-                    box
-                    prepend-icon="person"
-                    name="lastname"
-                    label="Lastname"
-                    type="text"
-                    v-model="lastname"
-                ></v-text-field>
-                <v-text-field
-                    box
+                    v-validate="'required|min:4|max:12'"
                     prepend-icon="email"
                     name="email"
                     label="Email"
                     type="email"
-                    v-model="email"
+                    v-model="user.email"
+                    :error-messages="errors.collect('email')"
+                ></v-text-field>
+                <v-text-field
+                    box
+                    v-validate="'min:4|max:12'"
+                    prepend-icon="person"
+                    name="firstname"
+                    label="Firstname"
+                    type="text"
+                    v-model="user.firstname"
+                    :error-messages="errors.collect('firstname')"
+                ></v-text-field>
+                <v-text-field
+                    box
+                    v-validate="'min:4|max:12'"
+                    prepend-icon="person"
+                    name="lastname"
+                    label="Lastname"
+                    type="text"
+                    v-model="user.lastname"
+                    :error-messages="errors.collect('lastname')"
                 ></v-text-field>
                 <v-textarea
                     box
+                    v-validate="'max:250'"
                     prepend-icon="description"
                     name="description"
                     label="Description"
                     type="text"
-                    v-model="description"
+                    v-model="user.description"
+                    :error-messages="errors.collect('description')"
                 ></v-textarea>
                 <v-layout justify-end>
-                    <v-btn outline flat color="normal" class="ma-0">Enregistrer</v-btn>
+                    <v-btn @click="save" outline flat color="normal" class="ma-0">Enregistrer</v-btn>
                 </v-layout>
             </v-form>
         </v-flex>
@@ -65,36 +75,27 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from 'vuex-class';
-import { IUser, ILoading } from '../../store/types';
+import { State } from "vuex-class";
+import { IUser } from "../../store/types";
 
-@Component
+@Component({
+    $_veeValidate: { validator: "new" }
+})
 export default class Account extends Vue {
-    @State("Loading") loading!: ILoading;
     @State("User") user!: IUser;
 
-    private username!: string;
-    private email!: string;
-    private description?: string;
-    private firstname?: string;
-    private lastname?: string;
-
-    public async created() {
+    public save(): void {
         try {
-            this.$store.commit("setLoadingEnable");
-
-            const { data } = await this.$http.get<IUser>(`/accounts/${this.user.userId}`);
-
-            this.username = data.username;
-            this.email = data.email;
-            this.description = data.description;
-            this.firstname = data.firstname;
-            this.lastname = data.lastname;
+            this.$http.put<IUser>(`/accounts/${this.user.userId}`, {
+                username: this.user.username,
+                email: this.user.email,
+                firstname: this.user.firstname,
+                lastname: this.user.lastname,
+                description: this.user.description
+            } as IUser);
         } catch (err) {
             throw err;
-        } 
-
-        this.$store.commit("setLoadingDisable");
+        }
     }
 }
 </script>

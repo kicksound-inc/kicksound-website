@@ -57,9 +57,6 @@ export default class App extends Vue {
 
     public created() {
         console.log("App component created");
-
-        if(this.isAuthenticated)
-            this.$store.dispatch("getUser");
     }
 
     public destroyed() {

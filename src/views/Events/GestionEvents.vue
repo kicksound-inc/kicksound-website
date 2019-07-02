@@ -220,7 +220,6 @@ import store from "@/store/store";
         if(store.getters.user.type != TypeUser.USER) {
             next();
         } else {
-            console.log("FROM", from);
             next({
                 name: from.name ? from.name : "Home"
             })
