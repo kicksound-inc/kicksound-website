@@ -15,7 +15,7 @@
                     name="username"
                     label="Username"
                     type="text"
-                    v-model="user.username"
+                    v-model="username"
                     :error-messages="errors.collect('username')"
                 ></v-text-field>
                 <v-text-field
@@ -25,7 +25,7 @@
                     name="email"
                     label="Email"
                     type="email"
-                    v-model="user.email"
+                    v-model="email"
                     :error-messages="errors.collect('email')"
                 ></v-text-field>
                 <v-text-field
@@ -35,7 +35,7 @@
                     name="firstname"
                     label="Firstname"
                     type="text"
-                    v-model="user.firstname"
+                    v-model="firstname"
                     :error-messages="errors.collect('firstname')"
                 ></v-text-field>
                 <v-text-field
@@ -45,7 +45,7 @@
                     name="lastname"
                     label="Lastname"
                     type="text"
-                    v-model="user.lastname"
+                    v-model="lastname"
                     :error-messages="errors.collect('lastname')"
                 ></v-text-field>
                 <v-textarea
@@ -55,11 +55,11 @@
                     name="description"
                     label="Description"
                     type="text"
-                    v-model="user.description"
+                    v-model="description"
                     :error-messages="errors.collect('description')"
                 ></v-textarea>
                 <v-layout justify-end>
-                    <v-btn @click="save" outline flat color="normal" class="ma-0">Enregistrer</v-btn>
+                    <v-btn @click="save" :loading="loadingBtn" outline flat color="normal" class="ma-0">Enregistrer</v-btn>
                 </v-layout>
             </v-form>
         </v-flex>
@@ -84,18 +84,56 @@ import { IUser } from "../../store/types";
 export default class Account extends Vue {
     @State("User") user!: IUser;
 
-    public save(): void {
+    private loadingBtn: boolean = false;
+
+    private username!: string;
+    private email!: string;
+    private firstname?: string;
+    private lastname?: string;
+    private description?: string;
+
+    public created() {
+        this.username = this.user.username;
+        this.email = this.user.email;
+        this.firstname = this.user.firstname;
+        this.lastname = this.user.lastname;
+        this.description = this.user.description;
+    }
+
+    public async save(): Promise<void> {
         try {
-            this.$http.put<IUser>(`/accounts/${this.user.userId}`, {
-                username: this.user.username,
-                email: this.user.email,
-                firstname: this.user.firstname,
-                lastname: this.user.lastname,
-                description: this.user.description
+            this.loadingBtn = true;
+            await this.$http.post<IUser>(
+                `/accounts/update`,
+                {
+                    username: this.username,
+                    email: this.email,
+                    firstname: this.firstname,
+                    lastname: this.lastname,
+                    description: this.description
+                } as IUser,
+                {
+                    params: {
+                        where: {
+                            id: this.user.userId
+                        }
+                    }
+                }
+            );
+
+            this.$store.commit("modifyUser", {
+                username: this.username,
+                email: this.email,
+                firstname: this.firstname,
+                lastname: this.lastname,
+                description: this.description
             } as IUser);
+
         } catch (err) {
             throw err;
         }
+
+        this.loadingBtn = false;
     }
 }
 </script>

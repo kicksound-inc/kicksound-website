@@ -96,6 +96,17 @@ export default class User extends VuexModule implements IUser {
     }
 
     @Mutation
+    public modifyUser(user: IUser): void {
+
+        if (user.username) { this.username = user.username; }
+        if (user.email) { this.email = user.email; }
+        if (user.firstname) { this.firstname = user.firstname; }
+        if (user.lastname) { this.lastname = user.lastname; }
+        if (user.description) { this.description = user.description; }
+
+    }
+
+    @Mutation
     public clearUser(): void {
         this.userId = 0;
         this.token = "";

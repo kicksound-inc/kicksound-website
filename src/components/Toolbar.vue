@@ -93,7 +93,7 @@ export default class Toolbar extends Vue {
     }
 
     private onClickSearch() {
-        alert("Search : " + this.search);
+        this.$router.push({ name: "Search", query: {"search_query": this.search} })
     }
 
     @Watch("search")

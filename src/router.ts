@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Router from "vue-router";
+import Router, { Route, NavigationGuard } from "vue-router";
 import Login from "@/views/Login.vue";
 import store from "@/store/store";
 import NotFound from "@/views/NotFound.vue";
@@ -95,6 +95,21 @@ const router: Router = new Router({
             ]
         },
         {
+            path: "/search",
+            name: "Search",
+            beforeEnter: (to: Route, from: Route, next: any) => {
+                if (to.query.search_query) {
+                    next();
+                } else {
+                    next({
+                        name: from.name ? from.name : "Home"
+                    });
+                }
+            },
+            component: () => import("./views/Search.vue"),
+            meta: { requireAuth: true }
+        },
+        {
             path: "*",
             component: NotFound
         }
@@ -115,7 +130,7 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-function denyAuth(to: any, from: any, next: any) {
+function denyAuth(to: Route, from: Route, next: any) {
     if (store.getters.isAuthenticated) {
         next({
             name: from.name ? from.name : "Home"
