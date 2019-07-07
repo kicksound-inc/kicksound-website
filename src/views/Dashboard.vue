@@ -2,6 +2,7 @@
     <div>
         <v-toolbar id="test" flat class="transparent">
             <v-toolbar-title class="mr-4">Dashboard</v-toolbar-title>
+            <v-divider vertical></v-divider>
         </v-toolbar>
         <v-divider></v-divider>
         <v-container fluid>

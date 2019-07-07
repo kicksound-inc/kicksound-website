@@ -39,6 +39,7 @@ import { IEvent, ILoading, IUser } from "@/store/types";
 import { State } from "vuex-class";
 import moment from "moment-timezone";
 import { AxiosResponse } from "axios";
+import { HttpError } from "../../store/errors";
 
 @Component
 export default class Event extends Vue {
@@ -65,7 +66,7 @@ export default class Event extends Vue {
         } catch (err) {
             throw err;
         }
-        
+
         this.$store.commit("setLoadingDisable");
     }
 
@@ -96,7 +97,13 @@ export default class Event extends Vue {
             );
             return data.length == 0 ? false : true;
         } catch (err) {
-            throw err;
+            if (err instanceof HttpError) {
+                if (err.status == 404) return false;
+                else if (err.status != 404) return true;
+                else throw err;
+            } else {
+                throw err;
+            }
         }
     }
 
@@ -106,10 +113,13 @@ export default class Event extends Vue {
 
     public async join(ev: any): Promise<void> {
         try {
-            await this.$http.post<any>(`/Events/${this.$route.params.id}/tickets`, {
-                accountId: this.user.userId,
-                price: 0
-            });
+            await this.$http.post<any>(
+                `/Events/${this.$route.params.id}/tickets`,
+                {
+                    accountId: this.user.userId,
+                    price: 0
+                }
+            );
 
             this.alreadyJoin = true;
         } catch (err) {

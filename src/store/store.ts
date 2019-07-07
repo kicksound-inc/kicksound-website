@@ -3,6 +3,7 @@ import Vuex, {StoreOptions} from "vuex";
 import Drawer from "@/store/modules/drawer";
 import User from "@/store/modules/user";
 import Snackbar from "@/store/modules/snackbar";
+import Search from "@/store/modules/search";
 import {IRootState} from "@/store/types";
 import VuexPersistence from "vuex-persist";
 import Loading from "@/store/modules/loading";
@@ -22,7 +23,8 @@ const store: StoreOptions<IRootState> = {
         Drawer,
         User,
         Snackbar,
-        Loading
+        Loading,
+        Search
     },
     plugins: [vuexLocal.plugin]
 };

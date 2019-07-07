@@ -95,19 +95,27 @@ const router: Router = new Router({
             ]
         },
         {
-            path: "/search",
+            path: "/search/:searchInput",
             name: "Search",
-            beforeEnter: (to: Route, from: Route, next: any) => {
-                if (to.query.search_query) {
-                    next();
-                } else {
-                    next({
-                        name: from.name ? from.name : "Home"
-                    });
-                }
-            },
-            component: () => import("./views/Search.vue"),
-            meta: { requireAuth: true }
+            component: () => import("./views/Search/Search.vue"),
+            meta: { requireAuth: true },
+            children: [
+                {
+                    path: "musics",
+                    name: "MusicsSearch",
+                    component: () => import("./views/Search/MusicsSearch.vue")
+                },
+                {
+                    path: "artists",
+                    name: "ArtistsSearch",
+                    component: () => import("./views/Search/ArtistsSearch.vue")
+                },
+                {
+                    path: "",
+                    name: "AllSearch",
+                    component: () => import("./views/Search/AllSearch.vue")
+                },
+            ]
         },
         {
             path: "*",

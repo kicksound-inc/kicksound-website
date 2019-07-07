@@ -58,7 +58,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Watch } from "vue-property-decorator";
-import { State, Getter } from "vuex-class";
+import { State, Getter, Action, Mutation } from "vuex-class";
 import {
     IDrawer,
     IRootState,
@@ -75,7 +75,7 @@ export default class Toolbar extends Vue {
     @State("User") user!: IUser;
     @Getter("isAuthenticated") isAuthenticated!: boolean;
 
-    private search: string | null = null;
+    private search: string = "";
 
     private onClickDrawerDesktop(): void {
         this.$store.commit("switchMini");
@@ -92,13 +92,14 @@ export default class Toolbar extends Vue {
         this.$router.push({ name: "Login" });
     }
 
-    private onClickSearch() {
-        this.$router.push({ name: "Search", query: {"search_query": this.search} })
+    private async onClickSearch() {
+        if(!this.search) return;
+        this.$router.push({ name: "AllSearch", params: {searchInput: this.search} });
     }
 
     @Watch("search")
     private onSearchChange(val: string, oldVal: string) {
-        console.log(val);
+        //console.log(val);
     }
 }
 </script>
