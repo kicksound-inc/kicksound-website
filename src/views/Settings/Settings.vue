@@ -8,6 +8,8 @@
                 <v-divider vertical></v-divider>
                 <v-btn flat exact to="/settings/password">Mot de passe</v-btn>
                 <v-divider vertical></v-divider>
+                <v-btn flat exact to="/settings/musics">Musiques</v-btn>
+                <v-divider vertical></v-divider>
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>

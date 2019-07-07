@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { ISearch, IUser, TypeUser } from '../types';
+import { ISearch, IUser, TypeUser, IMusic } from '../types';
 import axios from "axios";
 
 @Module
@@ -8,7 +8,7 @@ export default class Search extends VuexModule implements ISearch {
     public loading: boolean = false;
     public searchInput: string = "";
     public users: IUser[] = [];
-    public musics: string[] = [];
+    public musics: IMusic[] = [];
 
     @Action({ commit: "updateSearch", rawError: true })
     public async search(search: string): Promise<IUser[]> {

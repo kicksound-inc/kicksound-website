@@ -12,6 +12,14 @@
                 <v-btn v-else @click="unfollow">Unfollow</v-btn>
             </v-flex>
         </v-layout>
+
+        <v-data-table :items="musics" :headers="headers" hide-actions>
+            <template v-slot:items="props">
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.location }}</td>
+                <td>{{ props.item.releaseDate }}</td>
+            </template>
+        </v-data-table>
     </v-container>
 </template>
 
@@ -21,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { IUser, ILoading } from "../store/types";
+import { IUser, ILoading, IMusic } from "../store/types";
 import { State } from "vuex-class";
 import { AxiosResponse } from "axios";
 import { HttpError } from "../store/errors";
@@ -34,17 +42,26 @@ export default class User extends Vue {
     public user!: IUser;
     public alreadyFollow: boolean = false;
 
+    private musics: IMusic[] = [];
+    private headers: any = [
+        { text: "Titre", align: "left", sortable: false, value: "title" },
+        { text: "Location", sortable: false, value: "location" },
+        { text: "Date de sortie", sortable: false, value: "releaseDate" }
+    ];
+
     public async created(): Promise<void> {
         try {
             this.$store.commit("setLoadingEnable");
 
-            const [user, alreadyFollowing] = await Promise.all([
+            const [user, alreadyFollowing, musics] = await Promise.all([
                 this.getUser(),
-                this.iAmFollowing()
+                this.iAmFollowing(),
+                this.getMusicsFromUser()
             ]);
 
             this.user = user.data;
             this.alreadyFollow = alreadyFollowing;
+            this.musics = musics;
         } catch (err) {
             throw err;
         }
@@ -73,6 +90,24 @@ export default class User extends Vue {
             } else {
                 throw err;
             }
+        }
+    }
+
+    public async getMusicsFromUser(): Promise<Array<IMusic>> {
+        try {
+            const musics = await this.$http.get<Array<IMusic>>(`/Music`, {
+                params: {
+                    filter: {
+                        where: {
+                            accountId: this.$route.params.id
+                        }
+                    }
+                }
+            });
+            console.log("Musics", musics);
+            return musics.data;
+        } catch (err) {
+            throw err;
         }
     }
 

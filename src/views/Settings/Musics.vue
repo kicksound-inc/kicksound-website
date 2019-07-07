@@ -1,34 +1,18 @@
 <template>
-    <v-layout wrap>
-        <v-flex v-if="!events.length" class="text-xs-center">Il n'y a aucun événements</v-flex>
-        <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm12 md6 lg3>
-            <v-card :to="`/event/${event.id}`">
-                <v-img
-                    :src="`http://localhost:3000/image/${event.picture}`"
-                    lazy-src="https://picsum.photos/10/6?image=15"
-                    :aspect-ratio="16/9"
-                >
-                    <template v-slot:placeholder>
-                        <v-layout fill-height align-center justify-center ma-0>
-                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                        </v-layout>
-                    </template>
-                </v-img>
-                <v-card-title>
-                    <v-container fluid class="pa-0 ma-0">
-                        <v-layout>
-                            <v-flex>
-                                <span class="subheading clamp">{{event.title}}</span>
-                            </v-flex>
-                            <v-flex shrink>
-                                <span class="time ml-1">{{readableDate(event.date)}}</span>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-card-title>
-            </v-card>
-        </v-flex>
-        <v-dialog v-model="dialogCreation" max-width="600px" @input="v => v || onClose()">
+    <div>
+        <h1>Musiques</h1>
+        <v-data-table :items="musics" :headers="headers" hide-actions>
+            <template v-slot:items="props">
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.location }}</td>
+                <td>{{ props.item.releaseDate }}</td>
+                <td class="justify-center layout px-0">
+                    <v-icon small @click="deleteMusic(props.item)">delete</v-icon>
+                </td>
+            </template>
+        </v-data-table>
+
+        <v-dialog v-model="dialogCreation" max-width="600px">
             <template v-slot:activator="{ on }">
                 <v-btn v-on="on" fab dark fixed bottom right color="blue">
                     <v-icon>add</v-icon>
@@ -38,11 +22,11 @@
                 <v-toolbar dark color="primary">
                     <v-toolbar-title>Creation événement</v-toolbar-title>
                 </v-toolbar>
-                <form ref="creationEventForm" @submit.prevent="onClickCreateEvent">
+                <form ref="creationMusicForm" @submit.prevent="onClickCreateMusic">
                     <v-card-text>
                         <v-container grid-list-md pb-0>
                             <v-layout wrap>
-                                <v-flex xs12 sm9 md9>
+                                <v-flex xs12>
                                     <v-text-field
                                         box
                                         label="Titre*"
@@ -53,40 +37,7 @@
                                         :error-messages="errors.collect('title')"
                                     ></v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm3 md3>
-                                    <v-text-field
-                                        box
-                                        label="Places*"
-                                        v-validate="'required'"
-                                        name="tickets"
-                                        type="number"
-                                        v-model="tickets"
-                                        :error-messages="errors.collect('tickets')"
-                                    ></v-text-field>
-                                </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field
-                                        box
-                                        hide-details
-                                        readonly
-                                        browser-autocomplete="off"
-                                        label="Picture*"
-                                        v-validate="'required'"
-                                        name="pictureName"
-                                        type="text"
-                                        v-model="pictureName"
-                                        :error-messages="errors.collect('picture')"
-                                        @click="pickFile"
-                                    ></v-text-field>
-                                    <input
-                                        type="file"
-                                        style="display: none"
-                                        ref="image"
-                                        accept="image/*"
-                                        @change="onFilePicked"
-                                    >
-                                </v-flex>
-                                <v-flex xs12 sm3 md3>
                                     <v-menu
                                         ref="menuDatePicker"
                                         v-model="datePicker"
@@ -127,7 +78,7 @@
                                         </v-date-picker>
                                     </v-menu>
                                 </v-flex>
-                                <v-flex xs12 sm3 md3>
+                                <v-flex xs12 sm6 md6>
                                     <v-menu
                                         ref="menuTimePicker"
                                         v-model="timePicker"
@@ -153,7 +104,12 @@
                                                 :error-messages="errors.collect('time')"
                                             ></v-text-field>
                                         </template>
-                                        <v-time-picker v-model="time" format="24hr" no-title scrollable>
+                                        <v-time-picker
+                                            v-model="time"
+                                            format="24hr"
+                                            no-title
+                                            scrollable
+                                        >
                                             <v-spacer></v-spacer>
                                             <v-btn
                                                 flat
@@ -168,15 +124,27 @@
                                         </v-time-picker>
                                     </v-menu>
                                 </v-flex>
-                                <v-flex x12 sm12 md12>
-                                    <v-textarea
+                                <v-flex xs12>
+                                    <v-text-field
                                         box
-                                        rows="3"
-                                        label="Description"
-                                        auto-grow
-                                        clearable
-                                        v-model="description"
-                                    ></v-textarea>
+                                        hide-details
+                                        readonly
+                                        browser-autocomplete="off"
+                                        label="Musique*"
+                                        v-validate="'required'"
+                                        name="musicName"
+                                        type="text"
+                                        v-model="musicName"
+                                        :error-messages="errors.collect('musicName')"
+                                        @click="pickFile"
+                                    ></v-text-field>
+                                    <input
+                                        type="file"
+                                        style="display: none"
+                                        ref="music"
+                                        accept="audio/*"
+                                        @change="onFilePicked"
+                                    />
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -185,111 +153,125 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn outline color="blue darken-1" flat @click="reset">Reset</v-btn>
-                        <v-btn outline color="blue darken-1" flat @click="dialogCreation = false">Close</v-btn>
-                        <v-btn outline :loading="loadingBtn" color="blue darken-1" flat type="submit">Save</v-btn>
+                        <v-btn
+                            outline
+                            color="blue darken-1"
+                            flat
+                            @click="dialogCreation = false"
+                        >Close</v-btn>
+                        <v-btn
+                            outline
+                            :loading="loadingBtn"
+                            color="blue darken-1"
+                            flat
+                            type="submit"
+                        >Save</v-btn>
                     </v-card-actions>
                 </form>
             </v-card>
         </v-dialog>
-    </v-layout>
+    </div>
 </template>
 
 <style scoped>
-.time {
-    white-space: nowrap;
-}
-.clamp {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
 </style>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { IMusic, IUser } from "../../store/types";
 import { State } from "vuex-class";
-import { IEvent, IUser, TypeUser } from "@/store/types";
 import moment from "moment-timezone";
-import store from "@/store/store";
 
 @Component({
-    $_veeValidate: { validator: "new" },
-    beforeRouteEnter: (to, from, next) => {
-        if(store.getters.user.type != TypeUser.USER) {
-            next();
-        } else {
-            next({
-                name: from.name ? from.name : "Home"
-            })
-        }
-    }
+    $_veeValidate: { validator: "new" }
 })
-export default class GestionEvents extends Vue {
+export default class Musics extends Vue {
     @State("User") user!: IUser;
-
-    public events: IEvent[] = [];
 
     private dialogCreation: boolean = false;
     private title: string = "";
-    private tickets: string = "";
-    private pictureName: string = "";
-    private description: string = "";
     private datePicker: string = "";
     private date: string = "";
     private timePicker: string = "";
     private time: string = "";
+    private musicName: string = "";
     private loadingBtn: boolean = false;
 
-    private imageFile: File | null = null;
+    private musicFile: File | null = null;
+    private musics: IMusic[] = [];
+    private headers: any = [
+        { text: "Titre", align: "left", sortable: false, value: "title" },
+        { text: "Location", sortable: false, value: "location" },
+        { text: "Date de sortie", sortable: false, value: "releaseDate" },
+        { text: "Actions", sortable: false }
+    ];
 
     $refs!: {
-        image: HTMLInputElement;
-        creationEventForm: HTMLFormElement;
+        music: HTMLInputElement;
+        creationMusicForm: HTMLFormElement;
     };
 
-    public async created(): Promise<void> {
+    public async created() {
         try {
             this.$store.commit("setLoadingEnable");
-            const events = await this.$http.get<Array<IEvent>>(
-                `/accounts/${this.user.userId}/events`
-            );
-            console.log("GestionEvents", events);
-            this.events = events.data;
+            const musics = await this.$http.get<Array<IMusic>>(`/Music`, {
+                params: {
+                    filter: {
+                        where: {
+                            accountId: this.user.userId
+                        }
+                    }
+                }
+            });
+            console.log("Musics", musics);
+            this.musics = musics.data;
         } catch (err) {
             throw err;
         }
-        
+
         this.$store.commit("setLoadingDisable");
     }
 
-    public async onClickCreateEvent(ev: any): Promise<void> {
+    public async deleteMusic(music: IMusic) {
+        console.log("Delete", music);
+        try {
+            this.$store.commit("setLoadingEnable");
+            await this.$http.delete(`/Music/${music.id}`);
+            this.$delete(this.musics, this.musics.indexOf(music, 0));
+        } catch (err) {
+            throw err;
+        }
+
+        this.$store.commit("setLoadingDisable");
+    }
+
+    public async onClickCreateMusic() {
+        console.log("Create Musique");
         if (await this.$validator.validate()) {
             this.loadingBtn = true;
             try {
                 this.$store.commit("setLoadingEnable");
-                console.log("DEBUG :", this.date + this.time);
-                console.log("DEBUG :", moment(this.date + " " + this.time))
 
-                let response = await this.$http.post<any>(`/Events/`, {
-                    title: this.title,
-                    ticketsNumber: parseInt(this.tickets),
-                    picture: this.pictureName,
-                    description: this.description,
-                    date: moment(this.date + " " + this.time),
-                    accountId: this.user.userId
-                } as IEvent);
-                this.events.push(response.data as IEvent);
+                // Create music
+                let response = await this.$http.post<IMusic>(
+                    `/accounts/${this.user.userId}/artistMusic`,
+                    {
+                        title: this.title,
+                        location: this.musicName,
+                        releaseDate: moment(this.date + " " + this.time)
+                    } as IMusic
+                );
 
-                console.log("Create Event", response.data);
+                this.musics.push(response.data);
 
+                // Upload music
                 const formData = new FormData();
-                
-                formData.append("file", this.imageFile as File);
+                console.log("Music File", this.musicFile);
+                formData.append("file", this.musicFile as File);
 
                 response = await this.$http.post<any>(
-                    `/Photos/image/upload`,
+                    `/Photos/music/upload`,
                     formData,
                     {
                         headers: {
@@ -305,51 +287,41 @@ export default class GestionEvents extends Vue {
                 this.reset();
                 this.dialogCreation = false;
             }
-            
+
             this.$store.commit("setLoadingDisable");
         }
     }
 
-    public onClose(): void {
-        console.log("ONCLOSE");
-    }
-
     public reset(): void {
         this.title = "";
-        this.tickets = "";
-        this.pictureName = "";
-        this.description = "";
         this.datePicker = "";
         this.date = "";
         this.timePicker = "";
         this.time = "";
+        this.musicName = "";
         this.$validator.reset();
-        this.$refs.creationEventForm.reset();
-    }
-
-    public readableDate(date: string): string {
-        return moment(date).fromNow();
+        this.$refs.creationMusicForm.reset();
     }
 
     public pickFile(): void {
-        this.$refs.image.click();
+        this.$refs.music.click();
     }
 
     public onFilePicked(evt: any): void {
         const files = evt.target.files;
         if (files[0] !== undefined) {
-            this.pictureName = files[0].name;
-            if (this.pictureName.lastIndexOf(".") <= 0) {
+            this.musicName = files[0].name;
+            if (this.musicName.lastIndexOf(".") <= 0) {
                 return;
             }
             const fr = new FileReader();
             fr.readAsDataURL(files[0]);
             fr.addEventListener("load", () => {
-                this.imageFile = files[0];
+                this.musicFile = files[0];
             });
         } else {
-            this.pictureName = "";
-            this.imageFile = null;
+            this.musicName = "";
+            this.musicFile = null;
         }
     }
 }

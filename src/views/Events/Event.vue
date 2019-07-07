@@ -93,7 +93,16 @@ export default class Event extends Vue {
     public async getTicketForEvent(): Promise<boolean> {
         try {
             const { data } = await this.$http.get<Array<Object>>(
-                `/accounts/${this.user.userId}/events/${this.$route.params.id}/tickets`
+                `/Events/${this.$route.params.id}/tickets/`,
+                {
+                    params: {
+                        filter: {
+                            where: {
+                                accountId: this.user.userId
+                            }
+                        }
+                    }
+                }
             );
             return data.length == 0 ? false : true;
         } catch (err) {

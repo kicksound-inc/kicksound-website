@@ -91,6 +91,11 @@ const router: Router = new Router({
                     path: "password",
                     name: "Password",
                     component: () => import("./views/Settings/Password.vue")
+                },
+                {
+                    path: "musics",
+                    name: "Musics",
+                    component: () => import("./views/Settings/Musics.vue")
                 }
             ]
         },

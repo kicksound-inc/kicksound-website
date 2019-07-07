@@ -59,11 +59,22 @@ export interface ILoading {
     value: number;
 }
 
+export interface IMusic {
+    id: number;
+    title: string;
+    location: string;
+    releaseDate: moment.Moment; //TODO: Date
+    disabled: number;
+    albumId: number;
+    accountId: number;
+    musicKindId: number;
+}
+
 export interface ISearch {
     loading: boolean;
     searchInput: string;
     users: IUser[];
-    musics: string[]; //TODO: IMusic au lieu de string
+    musics: IMusic[]; //TODO: IMusic au lieu de string
 }
 
 /**

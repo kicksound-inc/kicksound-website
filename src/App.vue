@@ -1,9 +1,9 @@
 <template>
     <v-app v-resize="onResize">
-        <DrawerDesktop/>
-        <DrawerMobile/>
+        <DrawerDesktop />
+        <DrawerMobile />
 
-        <Toolbar/>
+        <Toolbar />
 
         <v-snackbar
             v-model="snackbar.enable"
@@ -11,14 +11,15 @@
             top
             :timeout="snackbar.timeout"
             :color="snackbar.color"
-        >
-            {{snackbar.message}}
-        </v-snackbar>
+        >{{snackbar.message}}</v-snackbar>
 
         <v-content :class="{ fullScreenImage: enableFullScreenImage() }">
             <Loading></Loading>
-            <router-view/>
+            <router-view />
         </v-content>
+        <v-footer v-if="true" app height="auto" fixed>
+            <AudioPlayer/>
+        </v-footer>
     </v-app>
 </template>
 
@@ -39,19 +40,20 @@ import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
 import { State, Getter } from "vuex-class";
-import { ISnackbar, IUser } from './store/types';
+import { ISnackbar, IUser } from "./store/types";
 import Loading from "@/components/Loading.vue";
+import AudioPlayer from "@/components/AudioPlayer.vue";
 
 @Component({
     components: {
         Toolbar,
         DrawerDesktop,
         DrawerMobile,
-        Loading
+        Loading,
+        AudioPlayer
     }
 })
 export default class App extends Vue {
-
     @State("Snackbar") snackbar!: ISnackbar;
     @Getter("isAuthenticated") isAuthenticated!: boolean;
 
@@ -70,12 +72,13 @@ export default class App extends Vue {
     }
 
     public onResize() {
-        if(window.innerWidth < 600 ||
-        this.$route.name == "Login" ||
-        this.$route.name == "Register")
+        if (
+            window.innerWidth < 600 ||
+            this.$route.name == "Login" ||
+            this.$route.name == "Register"
+        )
             this.$store.commit("setDrawerDesktop", false);
-        else
-            this.$store.commit("setDrawerDesktop", true);
+        else this.$store.commit("setDrawerDesktop", true);
     }
 }
 </script>
