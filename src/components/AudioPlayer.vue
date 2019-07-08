@@ -3,35 +3,35 @@
         <v-card>
             <v-card-text class="pa-3">
                 <v-layout fill-height row align-center>
-                    <v-flex shrink :class="{'custom-outline': debug}">
+                    <v-flex shrink>
                         <v-btn icon>
                             <v-icon large color="blue darken-2">skip_previous</v-icon>
                         </v-btn>
                     </v-flex>
 
-                    <v-flex shrink :class="{'custom-outline': debug}">
+                    <v-flex shrink>
                         <v-btn @click="playAudio" icon>
                             <v-icon large color="blue darken-2">play_arrow</v-icon>
                         </v-btn>
                     </v-flex>
 
-                    <v-flex shrink :class="{'custom-outline': debug}">
+                    <v-flex shrink>
                         <v-btn icon>
                             <v-icon large color="blue darken-2">skip_next</v-icon>
                         </v-btn>
                     </v-flex>
-                    <v-flex :class="{'custom-outline': debug}">
-                        <v-layout column :class="{'custom-outline': debug}">
-                            <v-flex :class="{'custom-outline': debug}">
+                    <v-flex>
+                        <v-layout column>
+                            <v-flex>
                                 <v-progress-linear v-model="valueDeterminate"></v-progress-linear>
                             </v-flex>
-                            <v-flex :class="{'custom-outline': debug}">
+                            <v-flex>
                                 <span>Titre 1 - Salut</span>
                             </v-flex>
                         </v-layout>
                     </v-flex>
-                    <v-flex shrink :class="{'custom-outline': debug}"></v-flex>
-                    <v-flex shrink :class="{'custom-outline': debug}">
+                    <v-flex shrink></v-flex>
+                    <v-flex shrink>
                         <v-btn icon>
                             <v-icon color="blue darken-2">volume_up</v-icon>
                         </v-btn>

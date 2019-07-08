@@ -4,6 +4,7 @@
         <v-data-table :items="musics" :headers="headers" hide-actions>
             <template v-slot:items="props">
                 <td>{{ props.item.title }}</td>
+                <td>{{ props.item.musicKind.name }}</td>
                 <td>{{ props.item.location }}</td>
                 <td>{{ props.item.releaseDate }}</td>
                 <td class="justify-center layout px-0">
@@ -127,7 +128,6 @@
                                 <v-flex xs12>
                                     <v-text-field
                                         box
-                                        hide-details
                                         readonly
                                         browser-autocomplete="off"
                                         label="Musique*"
@@ -145,6 +145,22 @@
                                         accept="audio/*"
                                         @change="onFilePicked"
                                     />
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-select
+                                        box
+                                        label="Genre"
+                                        name="musicKindSelected"
+                                        type="text"
+                                        v-model="musicKindSelected"
+                                        v-validate="'required'"
+                                        :error-messages="errors.collect('musicKindSelected')"
+                                        :items="musicKinds"
+                                        :loading="loadingMusicKind"
+                                        item-text="name"
+                                        item-value="id"
+                                        return-object
+                                    ></v-select>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -178,8 +194,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { IMusic, IUser } from "../../store/types";
+import { Component, Watch } from "vue-property-decorator";
+import { IMusic, IUser, IMusicKind } from "../../store/types";
 import { State } from "vuex-class";
 import moment from "moment-timezone";
 
@@ -197,11 +213,15 @@ export default class Musics extends Vue {
     private time: string = "";
     private musicName: string = "";
     private loadingBtn: boolean = false;
+    private loadingMusicKind: boolean = false;
 
     private musicFile: File | null = null;
     private musics: IMusic[] = [];
+    private musicKinds: IMusicKind[] = [];
+    private musicKindSelected: IMusicKind | null = null;
     private headers: any = [
         { text: "Titre", align: "left", sortable: false, value: "title" },
+        { text: "Genre", sortable: false, value: "musicKind" },
         { text: "Location", sortable: false, value: "location" },
         { text: "Date de sortie", sortable: false, value: "releaseDate" },
         { text: "Actions", sortable: false }
@@ -220,7 +240,8 @@ export default class Musics extends Vue {
                     filter: {
                         where: {
                             accountId: this.user.userId
-                        }
+                        },
+                        include: 'musicKind'
                     }
                 }
             });
@@ -259,6 +280,7 @@ export default class Musics extends Vue {
                     {
                         title: this.title,
                         location: this.musicName,
+                        musicKindId: this.musicKindSelected!.id,
                         releaseDate: moment(this.date + " " + this.time)
                     } as IMusic
                 );
@@ -322,6 +344,26 @@ export default class Musics extends Vue {
         } else {
             this.musicName = "";
             this.musicFile = null;
+        }
+    }
+
+    @Watch("dialogCreation")
+    private async onDialogChange(): Promise<void> {
+        if (this.dialogCreation) {
+            // Dialog open
+            try {
+                this.loadingMusicKind = true;
+                const { data } = await this.$http.get<Array<IMusicKind>>(
+                    `/musicKinds`
+                );
+                this.musicKinds = data;
+            } catch (err) {
+                throw err;
+            }
+
+            this.loadingMusicKind = false;
+        } else {
+            // Dialog close
         }
     }
 }

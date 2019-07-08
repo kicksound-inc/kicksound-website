@@ -77,6 +77,11 @@ export interface ISearch {
     musics: IMusic[]; //TODO: IMusic au lieu de string
 }
 
+export interface IMusicKind {
+    id: number;
+    name: string;
+}
+
 /**
  * ENUM
  */
