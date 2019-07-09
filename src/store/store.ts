@@ -4,6 +4,7 @@ import Drawer from "@/store/modules/drawer";
 import User from "@/store/modules/user";
 import Snackbar from "@/store/modules/snackbar";
 import Search from "@/store/modules/search";
+import AudioPlayer from "@/store/modules/audioplayer";
 import {IRootState} from "@/store/types";
 import VuexPersistence from "vuex-persist";
 import Loading from "@/store/modules/loading";
@@ -24,7 +25,8 @@ const store: StoreOptions<IRootState> = {
         User,
         Snackbar,
         Loading,
-        Search
+        Search,
+        AudioPlayer
     },
     plugins: [vuexLocal.plugin]
 };

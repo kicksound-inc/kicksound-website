@@ -8,7 +8,8 @@
                 <td>{{ props.item.location }}</td>
                 <td>{{ props.item.releaseDate }}</td>
                 <td class="justify-center layout px-0">
-                    <v-icon small @click="deleteMusic(props.item)">delete</v-icon>
+                    <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
+                    <v-icon small class="ma-2" @click="deleteMusic(props.item)">delete</v-icon>
                 </td>
             </template>
         </v-data-table>
@@ -265,6 +266,14 @@ export default class Musics extends Vue {
         }
 
         this.$store.commit("setLoadingDisable");
+    }
+
+    public async playMusic(music: IMusic) {
+        console.log(music);
+        this.$store.commit("setMusicsList", {
+            musics: this.musics,
+            musicSelected: music
+        });
     }
 
     public async onClickCreateMusic() {

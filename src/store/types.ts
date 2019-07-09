@@ -82,6 +82,12 @@ export interface IMusicKind {
     name: string;
 }
 
+export interface IAudioPlayer {
+    musicsList: IMusic[];
+    //currentMusicIndex: number;
+    currentMusic?: IMusic;
+}
+
 /**
  * ENUM
  */

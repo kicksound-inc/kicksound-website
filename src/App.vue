@@ -17,7 +17,7 @@
             <Loading></Loading>
             <router-view />
         </v-content>
-        <v-footer v-if="true" app height="auto" fixed>
+        <v-footer v-if="audioPlayer.musicsList.length" app height="auto" fixed>
             <AudioPlayer/>
         </v-footer>
     </v-app>
@@ -40,7 +40,7 @@ import Toolbar from "@/components/Toolbar.vue";
 import DrawerMobile from "@/components/DrawerMobile.vue";
 import DrawerDesktop from "@/components/DrawerDesktop.vue";
 import { State, Getter } from "vuex-class";
-import { ISnackbar, IUser } from "./store/types";
+import { ISnackbar, IUser, IAudioPlayer, IMusic } from "./store/types";
 import Loading from "@/components/Loading.vue";
 import AudioPlayer from "@/components/AudioPlayer.vue";
 
@@ -56,6 +56,7 @@ import AudioPlayer from "@/components/AudioPlayer.vue";
 export default class App extends Vue {
     @State("Snackbar") snackbar!: ISnackbar;
     @Getter("isAuthenticated") isAuthenticated!: boolean;
+    @State("AudioPlayer") audioPlayer!: IAudioPlayer;
 
     public created() {
         console.log("App component created");
