@@ -74,7 +74,7 @@ export interface ISearch {
     loading: boolean;
     searchInput: string;
     users: IUser[];
-    musics: IMusic[]; //TODO: IMusic au lieu de string
+    musics: IMusic[];
 }
 
 export interface IMusicKind {
@@ -84,8 +84,14 @@ export interface IMusicKind {
 
 export interface IAudioPlayer {
     musicsList: IMusic[];
-    //currentMusicIndex: number;
     currentMusic?: IMusic;
+}
+
+export interface IPlaylist {
+    id: number;
+    name: string;
+    disabled: boolean;
+    accoundId: number;
 }
 
 /**

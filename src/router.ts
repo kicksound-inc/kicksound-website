@@ -33,7 +33,13 @@ const router: Router = new Router({
         {
             path: "/playlists",
             name: "Playlists",
-            component: () => import("./views/Playlists.vue"),
+            component: () => import("./views/Playlists/Playlists.vue"),
+            meta: { requireAuth: true }
+        },
+        {
+            path: "/playlist/:id",
+            name: "Playlist",
+            component: () => import("./views/Playlists/Playlist.vue"),
             meta: { requireAuth: true }
         },
         {

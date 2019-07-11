@@ -16,8 +16,31 @@
         <v-data-table :items="musics" :headers="headers" hide-actions>
             <template v-slot:items="props">
                 <td>{{ props.item.title }}</td>
+                <td>{{ props.item.musicKind.name }}</td>
                 <td>{{ props.item.location }}</td>
                 <td>{{ props.item.releaseDate }}</td>
+                <td class="justify-center layout px-0">
+                    <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
+                    <v-menu v-model="menu" :close-on-content-click="false">
+                        <template v-slot:activator="{ on }">
+                            <v-icon small class="ma-2" v-on="on" @click="loadPlaylist(props.item)">playlist_add</v-icon>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-combobox
+                                    v-model="selectedPlaylist"
+                                    width="150px"
+                                    :items="playlists"
+                                    item-text="name"
+                                    label="Choisissez la playlist"
+                                    return-object
+                                    :loading="loadingCombobox"
+                                    @change="onChangeCombobox"
+                                ></v-combobox>
+                            </v-card-text>
+                        </v-card>
+                    </v-menu>
+                </td>
             </template>
         </v-data-table>
     </v-container>
@@ -29,11 +52,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { IUser, ILoading, IMusic } from "../store/types";
+import { IUser, ILoading, IMusic, IPlaylist } from "../store/types";
 import { State } from "vuex-class";
 import { AxiosResponse } from "axios";
 import { HttpError } from "../store/errors";
-
 @Component
 export default class User extends Vue {
     @State("User") currentUser!: IUser;
@@ -45,9 +67,19 @@ export default class User extends Vue {
     private musics: IMusic[] = [];
     private headers: any = [
         { text: "Titre", align: "left", sortable: false, value: "title" },
+        { text: "Genre", sortable: false, value: "musicKind" },
         { text: "Location", sortable: false, value: "location" },
-        { text: "Date de sortie", sortable: false, value: "releaseDate" }
+        { text: "Date de sortie", sortable: false, value: "releaseDate" },
+        { text: "Actions", sortable: false }
     ];
+
+    private menu: boolean = false;
+    private selectedPlaylist: string = "";
+    private playlists: Array<IPlaylist> = [];
+    private loadingCombobox: boolean = false;
+    // Variable temporaire pour stocker la musique 
+    // selectionné lors du clique sur l'ajout en playlist
+    private tempMusicSelected!: IMusic;
 
     public async created(): Promise<void> {
         try {
@@ -58,14 +90,15 @@ export default class User extends Vue {
                 this.iAmFollowing(),
                 this.getMusicsFromUser()
             ]);
-
+            console.log("not this", musics);
             this.user = user.data;
             this.alreadyFollow = alreadyFollowing;
             this.musics = musics;
+            console.log("this", this.musics);
         } catch (err) {
             throw err;
         }
-        
+
         this.$store.commit("setLoadingDisable");
     }
 
@@ -84,7 +117,8 @@ export default class User extends Vue {
             return true;
         } catch (err) {
             if (err instanceof HttpError) {
-                if (err.status == 404) return false; // Si l'utilisateur courrant ne suit pas l'utilisateur
+                if (err.status == 404) return false;
+                // Si l'utilisateur courrant ne suit pas l'utilisateur
                 else if (err.status != 404) return true;
                 else throw err;
             } else {
@@ -100,7 +134,8 @@ export default class User extends Vue {
                     filter: {
                         where: {
                             accountId: this.$route.params.id
-                        }
+                        },
+                        include: "musicKind"
                     }
                 }
             });
@@ -133,6 +168,36 @@ export default class User extends Vue {
             this.alreadyFollow = false;
         } catch (err) {
             throw err;
+        }
+    }
+
+    public playMusic(music: IMusic): void {}
+
+    public async loadPlaylist(music: IMusic): Promise<void> {
+        try {
+            this.tempMusicSelected = music;
+            this.loadingCombobox = true;
+            const { data } = await this.$http.get<Array<IPlaylist>>(
+                `/accounts/${this.currentUser.userId}/playlists`
+            );
+            this.playlists = data;
+            this.loadingCombobox = false;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    public async onChangeCombobox(playlist: IPlaylist): Promise<void> {
+        try {
+            this.loadingCombobox = true;
+            const { data } = await this.$http.put<IMusic>(
+                `/accounts/${this.currentUser.userId}/playlists/${playlist.id}/musics/rel/${this.tempMusicSelected.id}`
+            );
+        } catch (err) {
+            throw err;
+        } finally {
+            this.loadingCombobox = false;
+            this.menu = false;
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { ISearch, IUser, TypeUser, IMusic } from '../types';
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 @Module
 export default class Search extends VuexModule implements ISearch {
@@ -11,11 +11,11 @@ export default class Search extends VuexModule implements ISearch {
     public musics: IMusic[] = [];
 
     @Action({ commit: "updateSearch", rawError: true })
-    public async search(search: string): Promise<IUser[]> {
+    public async search(search: string): Promise<any> {
         console.log("SEARCHING WITH", search);
 
-        try {
-            const users = await axios.get<IUser[]>(`/accounts`, {
+        const [artists, musics] = await Promise.all([
+            axios.get<IUser[]>(`/accounts`, {
                 params: {
                     filter: {
                         where: {
@@ -39,11 +39,21 @@ export default class Search extends VuexModule implements ISearch {
                         }
                     }
                 }
-            });
-            return users.data;
-        } catch (err) {
-            throw err;
-        }
+            }),
+            axios.get<IMusic[]>(`/Music`, {
+                params: {
+                    filter: {
+                        where: {
+                            title: {
+                                like: `%${search}%`
+                            }
+                        }
+                    }
+                }
+            })
+        ]);
+
+        return { artists: artists.data, musics: musics.data };
     }
 
     @Action({ rawError: true })
@@ -52,8 +62,10 @@ export default class Search extends VuexModule implements ISearch {
     }
 
     @Mutation
-    public updateSearch(users: IUser[]): void {
-        this.users = users;
+    public updateSearch(search: any): void {
+        this.users = search.artists;
+        this.musics = search.musics;
+        console.log("JHHUYJKBHGYJK", search);
         this.loading = false;
     }
 

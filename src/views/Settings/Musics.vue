@@ -255,7 +255,7 @@ export default class Musics extends Vue {
         this.$store.commit("setLoadingDisable");
     }
 
-    public async deleteMusic(music: IMusic) {
+    public async deleteMusic(music: IMusic): Promise<void> {
         console.log("Delete", music);
         try {
             this.$store.commit("setLoadingEnable");
@@ -268,7 +268,7 @@ export default class Musics extends Vue {
         this.$store.commit("setLoadingDisable");
     }
 
-    public async playMusic(music: IMusic) {
+    public async playMusic(music: IMusic): Promise<void> {
         console.log(music);
         this.$store.commit("setMusicsList", {
             musics: this.musics,
@@ -276,7 +276,7 @@ export default class Musics extends Vue {
         });
     }
 
-    public async onClickCreateMusic() {
+    public async onClickCreateMusic(): Promise<void> {
         console.log("Create Musique");
         if (await this.$validator.validate()) {
             this.loadingBtn = true;
