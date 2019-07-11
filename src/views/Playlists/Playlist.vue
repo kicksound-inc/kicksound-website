@@ -24,6 +24,7 @@
                         <td class="justify-center layout px-0">
                             <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
                             <v-icon
+                                v-if="canDelete"
                                 small
                                 class="ma-2"
                                 @click="deleteMusicFromPlaylist(props.item)"
@@ -61,6 +62,7 @@ export default class Playlist extends Vue {
         { text: "Actions", sortable: false }
     ];
     private loadingTable: boolean = false;
+    private canDelete: boolean = false;
 
     public async created(): Promise<void> {
         try {
@@ -70,7 +72,8 @@ export default class Playlist extends Vue {
                 this.getPlaylist(),
                 this.getMusics()
             ]);
-
+            
+            this.canDelete = playlist.data.accountId == this.user.userId ? true : false;
             this.musics = musics.data;
             this.playlist = playlist.data;
         } catch (err) {

@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import { ISearch, IUser, TypeUser, IMusic } from '../types';
+import { ISearch, IUser, TypeUser, IMusic, IPlaylist } from '../types';
 import axios, { AxiosResponse } from "axios";
 
 @Module
@@ -9,12 +9,13 @@ export default class Search extends VuexModule implements ISearch {
     public searchInput: string = "";
     public users: IUser[] = [];
     public musics: IMusic[] = [];
+    public playlists: IPlaylist[] = [];
 
     @Action({ commit: "updateSearch", rawError: true })
     public async search(search: string): Promise<any> {
         console.log("SEARCHING WITH", search);
 
-        const [artists, musics] = await Promise.all([
+        const [artists, musics, playlists] = await Promise.all([
             axios.get<IUser[]>(`/accounts`, {
                 params: {
                     filter: {
@@ -50,10 +51,25 @@ export default class Search extends VuexModule implements ISearch {
                         }
                     }
                 }
+            }),
+            axios.get<IMusic[]>(`/Playlists`, {
+                params: {
+                    filter: {
+                        where: {
+                            name: {
+                                like: `%${search}%`
+                            }
+                        }
+                    }
+                }
             })
         ]);
 
-        return { artists: artists.data, musics: musics.data };
+        return {
+            artists: artists.data,
+            musics: musics.data,
+            playlists: playlists.data
+        };
     }
 
     @Action({ rawError: true })
@@ -65,7 +81,7 @@ export default class Search extends VuexModule implements ISearch {
     public updateSearch(search: any): void {
         this.users = search.artists;
         this.musics = search.musics;
-        console.log("JHHUYJKBHGYJK", search);
+        this.playlists = search.playlists;
         this.loading = false;
     }
 

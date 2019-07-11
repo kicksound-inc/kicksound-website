@@ -10,6 +10,8 @@
                 <v-divider vertical></v-divider>
                 <v-btn flat exact :to="`/search/${$route.params.searchInput}/artists`">Artistes</v-btn>
                 <v-divider vertical></v-divider>
+                <v-btn flat exact :to="`/search/${$route.params.searchInput}/playlists`">Playlists</v-btn>
+                <v-divider vertical></v-divider>
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>

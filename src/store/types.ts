@@ -91,7 +91,7 @@ export interface IPlaylist {
     id: number;
     name: string;
     disabled: boolean;
-    accoundId: number;
+    accountId: number;
 }
 
 /**

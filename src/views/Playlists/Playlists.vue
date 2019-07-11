@@ -137,7 +137,7 @@ export default class Playlist extends Vue {
                     {
                         name: this.name,
                         disabled: false,
-                        accoundId: this.user.userId
+                        accountId: this.user.userId
                     } as IPlaylist
                 );
                 this.playlists.push(data);

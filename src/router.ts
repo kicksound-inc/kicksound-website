@@ -122,6 +122,11 @@ const router: Router = new Router({
                     component: () => import("./views/Search/ArtistsSearch.vue")
                 },
                 {
+                    path: "playlists",
+                    name: "PlaylistsSearch",
+                    component: () => import("./views/Search/PlaylistsSearch.vue")
+                },
+                {
                     path: "",
                     name: "AllSearch",
                     component: () => import("./views/Search/AllSearch.vue")
