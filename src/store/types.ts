@@ -85,6 +85,10 @@ export interface IMusicKind {
 export interface IAudioPlayer {
     musicsList: IMusic[];
     currentMusic?: IMusic;
+    audio: HTMLAudioElement;
+    isInit: boolean;
+    isPaused: boolean;
+    currentPercent: number;
 }
 
 export interface IPlaylist {

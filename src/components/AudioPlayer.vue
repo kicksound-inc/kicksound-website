@@ -10,7 +10,7 @@
                     </v-flex>
 
                     <v-flex shrink>
-                        <v-btn v-if="isInit || isPaused" @click="playAudio" icon>
+                        <v-btn v-if="audioPlayer.isInit || audioPlayer.isPaused" @click="playAudio" icon>
                             <v-icon large color="blue darken-2">play_arrow</v-icon>
                         </v-btn>
                         <v-btn v-else @click="pauseAudio" icon>
@@ -26,7 +26,7 @@
                     <v-flex>
                         <v-layout column>
                             <v-flex>
-                                <v-progress-linear v-model="currentPercent"></v-progress-linear>
+                                <v-progress-linear v-model="audioPlayer.currentPercent"></v-progress-linear>
                             </v-flex>
                             <v-flex>
                                 <span>{{audioPlayer.currentMusic.title}}</span>
@@ -59,64 +59,26 @@ export default class AudioPlayer extends Vue {
 
     @State("AudioPlayer") audioPlayer!: IAudioPlayer;
 
-    private audio: HTMLAudioElement = new Audio();
-    private isInit: boolean = true;
-    private isPaused: boolean = false;
-    private currentPercent: number = 0;
-
-    public created() {
-        this.audio = new Audio(`http://localhost:3000/music/${this.audioPlayer.currentMusic!.location}`);
-        this.audio.load();
-        console.log("PAUSED", this.audio.paused);
+    private async playAudio(): Promise<void> {
+        await this.$store.dispatch("playAudio");
+        this.audioPlayer.audio.onended = () => {
+            setTimeout(async () => {
+                await this.nextMusic();
+                await this.playAudio();
+            }, 1000);
+        };
     }
 
-    private playAudio(): void {
-        this.audio.play();
-        this.isInit = false;
-        this.isPaused = false;
-        this.audio.ontimeupdate = this.updateCurrentTime;
-        this.audio.onended = this.onEnded;
-        console.log("PAUSED", this.audio.paused);
+    private async pauseAudio(): Promise<void> {
+        await this.$store.dispatch("pauseAudio");
     }
 
-    private updateCurrentTime(ev: any): void {
-        this.currentPercent = this.audio.currentTime / this.audio.duration * 100;
-        console.log(this.currentPercent);
-    }
-
-    private onEnded(ev: any): void {
-        setTimeout(() => {
-            this.nextMusic();
-            this.playAudio();
-        }, 1000);
-    }
-
-    private pauseAudio(): void {
-        this.audio.pause();
-        this.isPaused = true;
-    }
-
-    private nextMusic(): void {
-        this.audio.pause();
-        this.isPaused = true;
-        this.audio.currentTime = 0;
-        this.$store.commit("nextMusic");
-        this.changeMusic();
+    private async nextMusic(): Promise<void> {
+        await this.$store.dispatch("nextMusic");
     }
     
-    private previousMusic(): void {
-        this.audio.pause();
-        this.isPaused = true;
-        this.audio.currentTime = 0;
-        this.$store.commit("previousMusic");
-        this.changeMusic();
-    }
-
-    private changeMusic(): void {
-        if(this.audioPlayer.currentMusic) {
-            this.audio = new Audio(`http://localhost:3000/music/${this.audioPlayer.currentMusic.location}`);
-            this.audio.load();
-        }
+    private async previousMusic(): Promise<void> {
+        await this.$store.dispatch("previousMusic");
     }
 }
 </script>
