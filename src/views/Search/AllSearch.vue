@@ -14,7 +14,7 @@
                     <v-card class="ma-2" :to="`/user/${artist.id}`">
                         <v-card-text>
                             <v-avatar size="150">
-                                <img src="https://vuetifyjs.com/apple-touch-icon-180x180.png" />
+                                <img src="https://www.w3schools.com/howto/img_avatar.png" />
                             </v-avatar>
                             <h2>{{artist.username}}</h2>
                         </v-card-text>

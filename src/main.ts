@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store/store";
-import Vuetify from "vuetify/lib";
+import Vuetify, { VLayout } from "vuetify/lib";
 import "vuetify/src/stylus/app.styl";
 import VeeValidate from "vee-validate";
 import axios from "axios";
@@ -35,6 +35,7 @@ Vue.config.errorHandler = (error, vm, info) => {
 
 Vue.use(Vuetify, {
     iconfont: "md",
+    components: { VLayout }
 });
 
 Vue.use(VeeValidate, { inject: false });
@@ -72,6 +73,9 @@ moment.tz(moment.tz.guess());
  */
 
 Vue.prototype.$http = axios;
+Vue.prototype.$api = process.env.VUE_APP_API_URL;
+Vue.prototype.$image = process.env.VUE_APP_IMAGE_URL;
+Vue.prototype.$music = process.env.VUE_APP_MUSIC_URL;
 
 new Vue({
     router,

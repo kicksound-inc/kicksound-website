@@ -1,7 +1,7 @@
 <template>
     <div v-if="!loading.enable">
         <v-img
-            :src="`http://localhost:3000/image/${event.picture}`"
+            :src="`${$image}${event.picture}`"
             lazy-src="https://picsum.photos/10/6?image=15"
             max-height="500"
         >

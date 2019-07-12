@@ -23,7 +23,7 @@ export default class AudioPlayer extends VuexModule implements IAudioPlayer {
 
         this.musicsList = payload.musics;
         this.currentMusic = payload.musicSelected;
-        this.audio = new Audio(`http://localhost:3000/music/${payload.musicSelected.location}`);
+        this.audio = new Audio(`${process.env.VUE_APP_MUSIC_URL}${payload.musicSelected.location}`);
     }
 
     @Action({ commit: "postPlayAudio", rawError: true })
@@ -68,7 +68,7 @@ export default class AudioPlayer extends VuexModule implements IAudioPlayer {
         if (this.currentMusic) {
             this.currentMusic =
                 this.musicsList[(this.musicsList.indexOf(this.currentMusic) + 1) % this.musicsList.length];
-            this.audio = new Audio(`http://localhost:3000/music/${this.currentMusic.location}`);
+            this.audio = new Audio(`${process.env.VUE_APP_MUSIC_URL}${this.currentMusic.location}`);
             this.audio.load();
         }
     }
@@ -81,7 +81,7 @@ export default class AudioPlayer extends VuexModule implements IAudioPlayer {
         if (this.currentMusic) {
             const n = this.musicsList.length;
             this.currentMusic = this.musicsList[((this.musicsList.indexOf(this.currentMusic) - 1) % n + n) % n];
-            this.audio = new Audio(`http://localhost:3000/music/${this.currentMusic.location}`);
+            this.audio = new Audio(`${process.env.VUE_APP_MUSIC_URL}${this.currentMusic.location}`);
             this.audio.load();
         }
     }
@@ -93,5 +93,6 @@ export default class AudioPlayer extends VuexModule implements IAudioPlayer {
         this.isInit = true;
         this.isPaused = false;
         this.currentPercent = 0;
+        this.audio = new Audio();
     }
 }

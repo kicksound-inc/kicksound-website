@@ -88,6 +88,8 @@ export default class Toolbar extends Vue {
     private async onClickLogout() {
         console.log("OnClickLogout");
         const response = await this.$store.dispatch("logout");
+        await this.$store.dispatch("pauseAudio");
+        this.$store.commit("resetAudioPlayer");
         console.log("Logout successful");
         this.$router.push({ name: "Login" });
     }

@@ -4,7 +4,7 @@
         <v-flex v-for="event in events" :key="event.id" pa-2 xs12 sm12 md6 lg3>
             <v-card :to="`/event/${event.id}`">
                 <v-img
-                    :src="`http://localhost:3000/image/${event.picture}`"
+                    :src="`${$image}${event.picture}`"
                     lazy-src="https://picsum.photos/10/6?image=15"
                     :aspect-ratio="16/9"
                 >

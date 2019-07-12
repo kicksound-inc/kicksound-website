@@ -68,7 +68,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Model } from "vue-property-decorator";
-import { IUser, ISnackbar, TypeMessage } from "../store/types";
+import { IUser, ISnackbar, TypeMessage } from "@/store/types";
 
 @Component({
     $_veeValidate: { validator: "new" }

@@ -10,10 +10,12 @@
             <v-flex>
                 <v-btn v-if="!alreadyFollow" @click="follow">Follow</v-btn>
                 <v-btn v-else @click="unfollow">Unfollow</v-btn>
+                <v-btn v-if="currentUser.type >= typeKnownArtist  && !alreadyHiglighting" @click="highlight">Soutenir</v-btn>
+                <v-btn v-if="currentUser.type >= typeKnownArtist  && alreadyHiglighting" @click="unhighlight">Ne plus soutenir</v-btn>
             </v-flex>
         </v-layout>
 
-        <v-data-table :items="musics" :headers="headers" hide-actions>
+        <v-data-table :items="musics" :headers="headers" hide-actions class="ma-3">
             <template v-slot:items="props">
                 <td>{{ props.item.title }}</td>
                 <td>{{ props.item.musicKind.name }}</td>
@@ -23,7 +25,12 @@
                     <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
                     <v-menu v-model="menu" :close-on-content-click="false">
                         <template v-slot:activator="{ on }">
-                            <v-icon small class="ma-2" v-on="on" @click="loadPlaylist(props.item)">playlist_add</v-icon>
+                            <v-icon
+                                small
+                                class="ma-2"
+                                v-on="on"
+                                @click="loadPlaylist(props.item)"
+                            >playlist_add</v-icon>
                         </template>
                         <v-card>
                             <v-card-text>
@@ -52,7 +59,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { IUser, ILoading, IMusic, IPlaylist } from "../store/types";
+import { IUser, ILoading, IMusic, IPlaylist, TypeUser } from "../store/types";
 import { State } from "vuex-class";
 import { AxiosResponse } from "axios";
 import { HttpError } from "../store/errors";
@@ -63,6 +70,7 @@ export default class User extends Vue {
 
     public user!: IUser;
     public alreadyFollow: boolean = false;
+    public alreadyHiglighting: boolean = false;
 
     private musics: IMusic[] = [];
     private headers: any = [
@@ -77,22 +85,25 @@ export default class User extends Vue {
     private selectedPlaylist: string = "";
     private playlists: Array<IPlaylist> = [];
     private loadingCombobox: boolean = false;
-    // Variable temporaire pour stocker la musique 
+    // Variable temporaire pour stocker la musique
     // selectionné lors du clique sur l'ajout en playlist
     private tempMusicSelected!: IMusic;
+    private typeKnownArtist = TypeUser.KNOWN_ARTIST;
 
     public async created(): Promise<void> {
         try {
             this.$store.commit("setLoadingEnable");
 
-            const [user, alreadyFollowing, musics] = await Promise.all([
+            const [user, alreadyFollowing, musics, alreadyHiglighting] = await Promise.all([
                 this.getUser(),
                 this.iAmFollowing(),
-                this.getMusicsFromUser()
+                this.getMusicsFromUser(),
+                this.iAmHiglighting()
             ]);
             console.log("not this", musics);
             this.user = user.data;
             this.alreadyFollow = alreadyFollowing;
+            this.alreadyHiglighting = alreadyHiglighting;
             this.musics = musics;
             console.log("this", this.musics);
         } catch (err) {
@@ -149,11 +160,10 @@ export default class User extends Vue {
     public async follow(): Promise<void> {
         try {
             await this.$http.put<any>(
-                `accounts/${this.currentUser.userId}/following/rel/${this.$route.params.id}`
+                `/accounts/${this.currentUser.userId}/following/rel/${this.$route.params.id}`
             );
 
             this.alreadyFollow = true;
-            console.log(this.alreadyFollow);
         } catch (err) {
             throw err;
         }
@@ -162,7 +172,7 @@ export default class User extends Vue {
     public async unfollow(): Promise<void> {
         try {
             await this.$http.delete(
-                `accounts/${this.currentUser.userId}/following/rel/${this.$route.params.id}`
+                `/accounts/${this.currentUser.userId}/following/rel/${this.$route.params.id}`
             );
 
             this.alreadyFollow = false;
@@ -198,6 +208,48 @@ export default class User extends Vue {
         } finally {
             this.loadingCombobox = false;
             this.menu = false;
+        }
+    }
+
+    private async iAmHiglighting(): Promise<boolean> {
+        try {
+            const { data } = await this.$http.get<any>(
+                `/accounts/${this.currentUser.userId}/highlight/${this.$route.params.id}`
+            );
+            return true;
+        } catch (err) {
+            if (err instanceof HttpError) {
+                if (err.status == 404) return false;
+                // Si l'utilisateur courrant ne suit pas l'utilisateur
+                else if (err.status != 404) return true;
+                else throw err;
+            } else {
+                throw err;
+            }
+        }
+    }
+
+    private async highlight(): Promise<void> {
+        try {
+            await this.$http.put<any>(
+                `/accounts/${this.currentUser.userId}/highlight/rel/${this.$route.params.id}`
+            );
+
+            this.alreadyHiglighting = true;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    private async unhighlight(): Promise<void> {
+        try {
+            await this.$http.delete(
+                `/accounts/${this.currentUser.userId}/highlight/rel/${this.$route.params.id}`
+            );
+
+            this.alreadyHiglighting = false;
+        } catch (err) {
+            throw err;
         }
     }
 }

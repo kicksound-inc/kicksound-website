@@ -10,6 +10,9 @@ declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue
   interface Vue {
     $http: AxiosStatic,
-    $moment: Moment
+    $moment: Moment,
+    $api: string,
+    $image: string,
+    $music: string
   }
 }

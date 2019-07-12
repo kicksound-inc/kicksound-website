@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router, { Route, NavigationGuard } from "vue-router";
-import Login from "@/views/Login.vue";
+import Login from "@/views/Authentification/Login.vue";
 import store from "@/store/store";
 import NotFound from "@/views/NotFound.vue";
 
@@ -20,14 +20,20 @@ const router: Router = new Router({
         {
             path: "/register",
             name: "Register",
-            component: () => import("./views/Register.vue"),
+            component: () => import("./views/Authentification/Register.vue"),
             beforeEnter: denyAuth,
             meta: { enableFullScreenImage: true }
         },
         {
             path: "/",
             name: "Home",
-            component: () => import("./views/Dashboard.vue"),
+            component: () => import("./views/Discovery/Discovery.vue"),
+            meta: { requireAuth: true }
+        },
+        {
+            path: "/discovery/:genreId",
+            name: "DiscoveryGenre",
+            component: () => import("./views/Discovery/Discovery.vue"),
             meta: { requireAuth: true }
         },
         {
