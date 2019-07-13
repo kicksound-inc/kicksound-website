@@ -196,12 +196,22 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Watch } from "vue-property-decorator";
-import { IMusic, IUser, IMusicKind } from "../../store/types";
+import { IMusic, IUser, IMusicKind, TypeUser } from "../../store/types";
 import { State } from "vuex-class";
 import moment from "moment-timezone";
+import store from "@/store/store";
 
 @Component({
-    $_veeValidate: { validator: "new" }
+    $_veeValidate: { validator: "new" },
+    beforeRouteEnter: (to, from, next) => {
+        if(store.getters.user.type != TypeUser.USER) {
+            next();
+        } else {
+            next({
+                name: from.name ? from.name : "Home"
+            })
+        }
+    }
 })
 export default class Musics extends Vue {
     @State("User") user!: IUser;
@@ -294,6 +304,11 @@ export default class Musics extends Vue {
                     } as IMusic
                 );
 
+                response.data.musicKind = {
+                    id: this.musicKindSelected!.id,
+                    name: this.musicKindSelected!.name
+                };
+                
                 this.musics.push(response.data);
 
                 // Upload music

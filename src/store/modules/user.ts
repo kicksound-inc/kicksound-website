@@ -111,6 +111,10 @@ export default class User extends VuexModule implements IUser {
         this.userId = 0;
         this.token = "";
         this.username = "";
+        this.email = "";
+        this.firstname = "";
+        this.lastname = "";
+        this.description = "";
     }
 
     get isAuthenticated(): boolean {

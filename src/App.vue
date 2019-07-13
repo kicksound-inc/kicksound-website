@@ -43,6 +43,7 @@ import { State, Getter } from "vuex-class";
 import { ISnackbar, IUser, IAudioPlayer, IMusic } from "./store/types";
 import Loading from "@/components/Loading.vue";
 import AudioPlayer from "@/components/AudioPlayer.vue";
+import { HttpError } from './store/errors';
 
 @Component({
     components: {
@@ -58,8 +59,22 @@ export default class App extends Vue {
     @Getter("isAuthenticated") isAuthenticated!: boolean;
     @State("AudioPlayer") audioPlayer!: IAudioPlayer;
 
-    public created() {
+    public async created(): Promise<void> {
         console.log("App component created");
+        // Check token validity
+        try {
+            await this.$http.get('/accounts/me');
+        } catch ( err ) {
+            if (err instanceof HttpError) {
+                if (err.status == 401){
+                    this.$store.commit("clearUser");
+                    this.$router.push({name: "Login"});
+                }
+                else throw err;
+            } else {
+                throw err;
+            }
+        }
     }
 
     public destroyed() {

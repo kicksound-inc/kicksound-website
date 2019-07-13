@@ -67,6 +67,7 @@ export interface IMusic {
     disabled: number;
     albumId: number;
     accountId: number;
+    musicKind: IMusicKind;
     musicKindId: number;
 }
 
