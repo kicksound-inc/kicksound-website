@@ -26,15 +26,7 @@
             <v-layout wrap>
                 <v-flex v-if="!search.musics.length">Aucune musiques trouvées</v-flex>
                 <v-flex v-for="music in search.musics" :key="music.id" shrink ma-2>
-                    <v-card max-width="250">
-                        <v-img
-                            width="250"
-                            src="https://e-cdns-images.dzcdn.net/images/cover/d41d8cd98f00b204e9800998ecf8427e/264x264-000000-80-0-0.jpg"
-                        />
-                        <v-card-title>
-                            <div class="headline text-truncate">{{music.title}}</div>
-                        </v-card-title>
-                    </v-card>
+                    <Music :music="music"/>
                 </v-flex>
             </v-layout>
 
@@ -55,10 +47,12 @@ import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { ISearch } from "../../store/types";
 import Playlist from "@/components/Playlist.vue";
+import Music from "@/components/Music.vue";
 
 @Component({
     components: {
-        Playlist
+        Playlist,
+        Music
     }
 })
 export default class AllSearch extends Vue {
