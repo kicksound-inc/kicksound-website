@@ -29,14 +29,7 @@
             <v-layout>
                 <v-flex v-if="!usersSuggested.length">Aucun artistes trouvés</v-flex>
                 <v-flex v-else v-for="user in usersSuggested" :key="user.id" shrink class="text-xs-center">
-                    <v-card class="ma-2" :to="`/user/${user.id}`">
-                        <v-card-text>
-                            <v-avatar size="150">
-                                <img src="https://www.w3schools.com/howto/img_avatar.png" />
-                            </v-avatar>
-                            <h2>{{user.username}}</h2>
-                        </v-card-text>
-                    </v-card>
+                    <Artist :artist="user"/>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -52,8 +45,13 @@ import { Component } from "vue-property-decorator";
 import { IMusicKind, IUser } from "@/store/types";
 import { AxiosResponse } from "axios";
 import { State } from "vuex-class";
+import Artist from "@/components/Artist.vue";
 
-@Component
+@Component({
+    components: {
+        Artist
+    }
+})
 export default class Discovery extends Vue {
     @State("User") user!: IUser;
 

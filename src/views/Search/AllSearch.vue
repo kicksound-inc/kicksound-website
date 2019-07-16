@@ -11,14 +11,7 @@
                     shrink
                     class="text-xs-center"
                 >
-                    <v-card class="ma-2" :to="`/user/${artist.id}`">
-                        <v-card-text>
-                            <v-avatar size="150">
-                                <img src="https://www.w3schools.com/howto/img_avatar.png" />
-                            </v-avatar>
-                            <h2>{{artist.username}}</h2>
-                        </v-card-text>
-                    </v-card>
+                    <Artist :artist="artist"/>
                 </v-flex>
             </v-layout>
 
@@ -48,11 +41,13 @@ import { State } from "vuex-class";
 import { ISearch } from "../../store/types";
 import Playlist from "@/components/Playlist.vue";
 import Music from "@/components/Music.vue";
+import Artist from "@/components/Artist.vue";
 
 @Component({
     components: {
         Playlist,
-        Music
+        Music,
+        Artist
     }
 })
 export default class AllSearch extends Vue {
