@@ -42,15 +42,7 @@
             <v-layout wrap>
                 <v-flex v-if="!search.playlists.length">Aucune playlists trouvées</v-flex>
                 <v-flex v-for="playlist in search.playlists" :key="playlist.id" shrink ma-2>
-                    <v-card max-width="250" :to="`/playlist/${playlist.id}`">
-                        <v-img
-                            width="250"
-                            src="https://e-cdns-images.dzcdn.net/images/cover/d41d8cd98f00b204e9800998ecf8427e/264x264-000000-80-0-0.jpg"
-                        />
-                        <v-card-title>
-                            <div class="headline text-truncate">{{playlist.name}}</div>
-                        </v-card-title>
-                    </v-card>
+                    <Playlist :playlist="playlist"/>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -62,8 +54,13 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { ISearch } from "../../store/types";
+import Playlist from "@/components/Playlist.vue";
 
-@Component
+@Component({
+    components: {
+        Playlist
+    }
+})
 export default class AllSearch extends Vue {
     @State("Search") search!: ISearch;
 

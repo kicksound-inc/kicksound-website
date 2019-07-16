@@ -68,14 +68,7 @@
                     </v-dialog>
                 </v-flex>
                 <v-flex v-for="playlist in playlists" :key="playlist.id" shrink ma-2>
-                    <v-card height="100%" width="250" :to="`/playlist/${playlist.id}`">
-                        <v-img
-                            src="https://e-cdns-images.dzcdn.net/images/cover/d41d8cd98f00b204e9800998ecf8427e/264x264-000000-80-0-0.jpg"
-                        />
-                        <v-card-title>
-                            <div class="headline text-truncate">{{playlist.name}}</div>
-                        </v-card-title>
-                    </v-card>
+                    <PlaylistComponent :playlist="playlist"/>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -93,9 +86,13 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { IPlaylist, IUser } from "@/store/types";
 import { State } from "vuex-class";
+import PlaylistComponent from "@/components/Playlist.vue";
 
 @Component({
-    $_veeValidate: { validator: "new" }
+    $_veeValidate: { validator: "new" },
+    components: {
+        PlaylistComponent
+    }
 })
 export default class Playlist extends Vue {
     @State("User") user!: IUser;
