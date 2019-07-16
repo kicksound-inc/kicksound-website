@@ -10,8 +10,8 @@
             <v-flex>
                 <v-btn v-if="!alreadyFollow" @click="follow">Follow</v-btn>
                 <v-btn v-else @click="unfollow">Unfollow</v-btn>
-                <v-btn v-if="currentUser.type >= typeKnownArtist  && !alreadyHiglighting" @click="highlight">Soutenir</v-btn>
-                <v-btn v-if="currentUser.type >= typeKnownArtist  && alreadyHiglighting" @click="unhighlight">Ne plus soutenir</v-btn>
+                <v-btn v-if="currentUser.type >= typeKnownArtist && !alreadyHiglighting" @click="highlight">Soutenir</v-btn>
+                <v-btn v-if="currentUser.type >= typeKnownArtist && alreadyHiglighting" @click="unhighlight">Ne plus soutenir</v-btn>
             </v-flex>
         </v-layout>
 
@@ -181,7 +181,13 @@ export default class User extends Vue {
         }
     }
 
-    public playMusic(music: IMusic): void {}
+    public async playMusic(music: IMusic): Promise<void> {
+        console.log(music);
+        this.$store.commit("setMusicsList", {
+            musics: this.musics,
+            musicSelected: music
+        });
+    }
 
     public async loadPlaylist(music: IMusic): Promise<void> {
         try {
