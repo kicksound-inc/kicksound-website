@@ -272,7 +272,7 @@ export default class GestionEvents extends Vue {
                 console.log("DEBUG :", this.date + this.time);
                 console.log("DEBUG :", moment(this.date + " " + this.time))
 
-                let response = await this.$http.post<any>(`/Events/`, {
+                const event = await this.$http.post<any>(`/Events/`, {
                     title: this.title,
                     ticketsNumber: parseInt(this.tickets),
                     picture: this.pictureName,
@@ -280,15 +280,14 @@ export default class GestionEvents extends Vue {
                     date: moment(this.date + " " + this.time),
                     accountId: this.user.userId
                 } as IEvent);
-                this.events.push(response.data as IEvent);
 
-                console.log("Create Event", response.data);
+                console.log("Create Event", event.data);
 
                 const formData = new FormData();
                 
                 formData.append("file", this.imageFile as File);
 
-                response = await this.$http.post<any>(
+                const response = await this.$http.post<any>(
                     `/Photos/image/upload`,
                     formData,
                     {
@@ -298,6 +297,7 @@ export default class GestionEvents extends Vue {
                     }
                 );
                 console.log("Upload file", response.data);
+                this.events.push(event.data as IEvent);
             } catch (err) {
                 throw err;
             } finally {
