@@ -22,7 +22,7 @@
             </template>
             <v-card>
                 <v-toolbar dark color="primary">
-                    <v-toolbar-title>Creation événement</v-toolbar-title>
+                    <v-toolbar-title>Ajout musique</v-toolbar-title>
                 </v-toolbar>
                 <form ref="creationMusicForm" @submit.prevent="onClickCreateMusic">
                     <v-card-text>
