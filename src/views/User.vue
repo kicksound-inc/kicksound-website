@@ -40,7 +40,7 @@
                                         small
                                         class="ma-2"
                                         v-on="on"
-                                        @click="loadPlaylist(props.item)"
+                                        @click="loadPlaylistFromCurrentUser(props.item)"
                                     >playlist_add</v-icon>
                                 </template>
                                 <v-card>
@@ -48,10 +48,12 @@
                                         <v-combobox
                                             v-model="selectedPlaylist"
                                             width="150px"
-                                            :items="playlists"
+                                            :items="playlistsCurrentUser"
                                             item-text="name"
                                             label="Choisissez la playlist"
                                             return-object
+                                            :loading="loadingCombobox"
+                                            @change="onChangeCombobox"
                                         ></v-combobox>
                                     </v-card-text>
                                 </v-card>
@@ -111,10 +113,11 @@ export default class User extends Vue {
     private menu: boolean = false;
     private selectedPlaylist: string = "";
     private playlists: Array<IPlaylist> = [];
+    private playlistsCurrentUser: Array<IPlaylist> = [];
     private loadingCombobox: boolean = false;
     // Variable temporaire pour stocker la musique
     // selectionné lors du clique sur l'ajout en playlist
-    //private tempMusicSelected!: IMusic;
+    private tempMusicSelected!: IMusic;
     private typeKnownArtist = TypeUser.KNOWN_ARTIST;
 
     public async created(): Promise<void> {
@@ -236,7 +239,24 @@ export default class User extends Vue {
         }
     }
 
-    /*public async onChangeCombobox(playlist: IPlaylist): Promise<void> {
+    public async loadPlaylistFromCurrentUser(music: IMusic): Promise<void> {
+        try {
+            this.tempMusicSelected = music;
+            this.loadingCombobox = true;
+            const { data } = await this.$http.get<Array<IPlaylist>>(
+                `/accounts/${this.currentUser.userId}/playlists`
+            );
+            this.playlistsCurrentUser = data;
+            this.loadingCombobox = false;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    public async onChangeCombobox(playlist: IPlaylist): Promise<void> {
+        if(!playlist) {
+            return;
+        }
         try {
             this.loadingCombobox = true;
             const { data } = await this.$http.put<IMusic>(
@@ -248,7 +268,7 @@ export default class User extends Vue {
             this.loadingCombobox = false;
             this.menu = false;
         }
-    }*/
+    }
 
     private async iAmHiglighting(): Promise<boolean> {
         try {
