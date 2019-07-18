@@ -7,17 +7,16 @@
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-container>
+        <v-container fluid>
             <v-layout wrap>
-                <v-flex shrink ma-2>
+                <v-flex xs12 sm6 md4 lg2 pa-2>
                     <v-dialog v-model="dialog" max-width="600px">
                         <template v-slot:activator="{ on }">
-                            <v-card v-on="on" height="100%" width="250" class="add">
-                                <v-card-text style="height: 100%">
-                                    <v-layout align-center justify-center fill-height>
-                                        <v-icon size="50px">add</v-icon>
-                                    </v-layout>
-                                </v-card-text>
+                            <v-card height="100%" v-on="on" class="add">
+                                <div id="addIcon">
+                                    <v-icon size="50">add</v-icon>
+                                </div>
+                                <v-responsive :aspect-ratio="1"></v-responsive>
                             </v-card>
                         </template>
                         <v-card>
@@ -67,8 +66,8 @@
                         </v-card>
                     </v-dialog>
                 </v-flex>
-                <v-flex v-for="playlist in playlists" :key="playlist.id" shrink ma-2>
-                    <PlaylistComponent :playlist="playlist"/>
+                <v-flex v-for="playlist in playlists" :key="playlist.id" xs12 sm6 md4 lg2 pa-2>
+                    <PlaylistComponent :playlist="playlist" />
                 </v-flex>
             </v-layout>
         </v-container>
@@ -78,6 +77,13 @@
 <style scoped>
 .add {
     border: 1px dashed;
+}
+
+#addIcon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 </style>
 

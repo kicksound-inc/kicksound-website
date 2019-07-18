@@ -11,23 +11,31 @@
                     shrink
                     class="text-xs-center"
                 >
-                    <Artist :artist="artist"/>
+                    <Artist :artist="artist" />
                 </v-flex>
             </v-layout>
 
             <h1>Musiques</h1>
             <v-layout wrap>
                 <v-flex v-if="!search.musics.length">Aucune musiques trouvées</v-flex>
-                <v-flex v-for="music in search.musics" :key="music.id" shrink ma-2>
-                    <Music :music="music"/>
+                <v-flex v-for="music in search.musics" :key="music.id" pa-2 xs12 sm6 md4 lg2>
+                    <Music :music="music" />
                 </v-flex>
             </v-layout>
 
             <h1>Playlists</h1>
             <v-layout wrap>
                 <v-flex v-if="!search.playlists.length">Aucune playlists trouvées</v-flex>
-                <v-flex v-for="playlist in search.playlists" :key="playlist.id" shrink ma-2>
-                    <Playlist :playlist="playlist"/>
+                <v-flex
+                    v-for="playlist in search.playlists"
+                    :key="playlist.id"
+                    xs12
+                    sm6
+                    md4
+                    lg2
+                    pa-2
+                >
+                    <Playlist :playlist="playlist" />
                 </v-flex>
             </v-layout>
         </v-container>
