@@ -228,7 +228,7 @@ export default class User extends Vue {
         try {
             this.loadingCombobox = true;
             const { data } = await this.$http.get<Array<IPlaylist>>(
-                `/accounts/${this.currentUser.userId}/playlists`
+                `/accounts/${this.$route.params.id}/playlists`
             );
             return data;
         } catch (err) {
