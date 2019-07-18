@@ -59,9 +59,15 @@
                     :error-messages="errors.collect('description')"
                 ></v-textarea>
                 <v-layout justify-end>
-                    <v-btn @click="save" :loading="loadingBtn" outline flat color="normal" class="ma-0">Enregistrer</v-btn>
+                    <v-btn @click="save" :loading="loadingSaveBtn" outline flat color="normal" class="ma-0">Enregistrer</v-btn>
                 </v-layout>
             </v-form>
+        </v-flex>
+        <v-flex>
+            <h1 class="ma-2">Supprimer son compte</h1>
+        </v-flex>
+        <v-flex>
+            <v-btn outline flat color="error" @click="deleteAccount">Supprimer</v-btn>
         </v-flex>
     </v-layout>
 </template>
@@ -84,7 +90,8 @@ import { IUser } from "../../store/types";
 export default class Account extends Vue {
     @State("User") user!: IUser;
 
-    private loadingBtn: boolean = false;
+    private loadingSaveBtn: boolean = false;
+    private loadingDeleteBtn: boolean = false;
 
     private username!: string;
     private email!: string;
@@ -102,7 +109,7 @@ export default class Account extends Vue {
 
     public async save(): Promise<void> {
         try {
-            this.loadingBtn = true;
+            this.loadingSaveBtn = true;
             await this.$http.post<IUser>(
                 `/accounts/update`,
                 {
@@ -133,7 +140,17 @@ export default class Account extends Vue {
             throw err;
         }
 
-        this.loadingBtn = false;
+        this.loadingSaveBtn = false;
+    }
+
+    private async deleteAccount(): Promise<void> {
+        this.loadingDeleteBtn = true;
+
+        await this.$http.delete(`/accounts/${this.user.userId}`);
+        this.$store.commit("clearUser");
+        this.$router.push({name: "Login"});
+
+        this.loadingDeleteBtn = false;
     }
 }
 </script>
