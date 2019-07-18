@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-toolbar id="test" flat class="transparent">
+        <v-toolbar flat class="transparent">
             <v-toolbar-title class="mr-4">Découverte</v-toolbar-title>
             <v-divider vertical></v-divider>
         </v-toolbar>
@@ -9,7 +9,7 @@
         <v-container fluid v-if="!loading">
             <v-layout wrap justify-center ma-4>
                 <v-flex v-for="musicKind in musicKinds" :key="musicKind.id" pa-2 xs12 sm6 md3 lg2>
-                    <v-card to="/tests">
+                    <v-card :to="`/discovery/${musicKind.id}`">
                         <v-img
                             :aspect-ratio="1/1"
                             src="https://images.unsplash.com/photo-1420161900862-9a86fa1f5c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"

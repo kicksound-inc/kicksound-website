@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>Musiques</h1>
-        <v-data-table :items="musics" :headers="headers" hide-actions>
+        <v-data-table :items="musics" :headers="headers" hide-actions class="ma-2">
             <template v-slot:items="props">
                 <td>{{ props.item.title }}</td>
                 <td>{{ props.item.musicKind.name }}</td>

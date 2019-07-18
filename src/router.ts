@@ -33,7 +33,7 @@ const router: Router = new Router({
         {
             path: "/discovery/:genreId",
             name: "DiscoveryGenre",
-            component: () => import("./views/Discovery/Discovery.vue"),
+            component: () => import("./views/Discovery/DiscoveryDetails.vue"),
             meta: { requireAuth: true }
         },
         {
