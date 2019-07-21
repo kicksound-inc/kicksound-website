@@ -23,12 +23,6 @@
                             <td>{{ props.item.releaseDate }}</td>
                             <td class="justify-center layout px-0">
                                 <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
-                                <v-icon
-                                    v-if="canDelete"
-                                    small
-                                    class="ma-2"
-                                    @click="deleteMusicFromPlaylist(props.item)"
-                                >delete</v-icon>
                             </td>
                         </template>
                     </v-data-table>
