@@ -20,10 +20,30 @@
                     <v-btn v-if="!alreadyJoin" @click="join">Participer</v-btn>
                     <v-btn v-else @click="leave">Quitter</v-btn>
                 </v-flex>
-                <v-flex>Créé par {{event.id}}</v-flex>
+                <v-flex>Créé par {{event.account.username.toUpperCase()}}</v-flex>
                 <v-flex>Evenement le {{readableDate(event.date)}}</v-flex>
                 <v-flex>Places : {{event.ticketsNumber}}</v-flex>
                 <v-flex>Description : {{event.description}}</v-flex>
+            </v-layout>
+            <v-layout column v-if="user.userId == event.accountId" pt-3>
+                <v-flex>
+                    <h1>Participants</h1>
+                </v-flex>
+                <v-flex v-if="!participants.length" ma-2>Aucun participants trouvés</v-flex>
+                <v-layout wrap ma-2>
+                    <v-flex
+                        v-for="participant in participants"
+                        :key="participant.id"
+                        pa-2
+                        xs12
+                        sm6
+                        md4
+                        lg2
+                        class="text-xs-center"
+                    >
+                        <User :artist="participant" />
+                    </v-flex>
+                </v-layout>
             </v-layout>
         </v-container>
     </div>
@@ -40,14 +60,19 @@ import { State } from "vuex-class";
 import moment from "moment-timezone";
 import { AxiosResponse } from "axios";
 import { HttpError } from "../../store/errors";
+import User from "@/components/Artist.vue";
 
-@Component
+@Component({
+    components: {
+        User
+    }
+})
 export default class Event extends Vue {
     @State("User") user!: IUser;
     @State("Loading") loading!: ILoading;
 
     public event!: IEvent;
-    public participants!: any;
+    public participants!: IUser[];
     public alreadyJoin: boolean = false;
 
     public async created(): Promise<void> {
@@ -73,7 +98,14 @@ export default class Event extends Vue {
     public async getEvent(): Promise<AxiosResponse<IEvent>> {
         try {
             return await this.$http.get<IEvent>(
-                `/Events/${this.$route.params.id}`
+                `/Events/${this.$route.params.id}`,
+                {
+                    params: {
+                        filter: {
+                            include: "account"
+                        }
+                    }
+                }
             );
         } catch (err) {
             throw err;

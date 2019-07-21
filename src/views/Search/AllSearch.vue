@@ -8,7 +8,11 @@
                 <v-flex
                     v-for="artist in search.users"
                     :key="artist.id"
-                    shrink
+                    pa-2
+                    xs12 
+                    sm6 
+                    md4 
+                    lg2
                     class="text-xs-center"
                 >
                     <Artist :artist="artist" />
