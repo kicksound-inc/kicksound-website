@@ -26,9 +26,18 @@
                 </v-flex>
             </v-layout>
             <h1>Suggestion Artiste</h1>
-            <v-layout>
+            <v-layout wrap>
                 <v-flex v-if="!usersSuggested.length">Aucun artistes trouvés</v-flex>
-                <v-flex v-else v-for="user in usersSuggested" :key="user.id" shrink class="text-xs-center">
+                <v-flex 
+                    v-else v-for="user in usersSuggested" 
+                    :key="user.id"
+                    pa-2
+                    xs12 
+                    sm6 
+                    md4 
+                    lg2 
+                    class="text-xs-center"
+                >
                     <Artist :artist="user"/>
                 </v-flex>
             </v-layout>
