@@ -34,13 +34,13 @@
                         <td>{{ props.item.releaseDate }}</td>
                         <td class="justify-center layout px-0">
                             <v-icon small class="ma-2" @click="playMusic(props.item)">play_arrow</v-icon>
-                            <v-menu v-model="menu" :close-on-content-click="false">
+                            <v-menu v-model="menu[props.index]" :close-on-content-click="false">
                                 <template v-slot:activator="{ on }">
                                     <v-icon
                                         small
                                         class="ma-2"
                                         v-on="on"
-                                        @click="loadPlaylistFromCurrentUser(props.item)"
+                                        @click="loadPlaylistFromCurrentUser(props.index, props.item)"
                                     >playlist_add</v-icon>
                                 </template>
                                 <v-card>
@@ -110,7 +110,8 @@ export default class User extends Vue {
         { text: "Actions", sortable: false }
     ];
 
-    private menu: boolean = false;
+    private menu: boolean[] = [];
+    private tempMenuIndex!: number;
     private selectedPlaylist: string = "";
     private playlists: Array<IPlaylist> = [];
     private playlistsCurrentUser: Array<IPlaylist> = [];
@@ -137,7 +138,10 @@ export default class User extends Vue {
                 this.iAmHiglighting(),
                 this.loadPlaylist()
             ]);
-            console.log("not this", musics);
+
+            for (var i = 0; i < musics.length; i++) {
+                this.menu.push(false);
+            }
             this.user = user.data;
             this.alreadyFollow = alreadyFollowing;
             this.alreadyHiglighting = alreadyHiglighting;
@@ -239,8 +243,9 @@ export default class User extends Vue {
         }
     }
 
-    public async loadPlaylistFromCurrentUser(music: IMusic): Promise<void> {
+    public async loadPlaylistFromCurrentUser(index: number, music: IMusic): Promise<void> {
         try {
+            this.tempMenuIndex = index;
             this.tempMusicSelected = music;
             this.loadingCombobox = true;
             const { data } = await this.$http.get<Array<IPlaylist>>(
@@ -266,7 +271,7 @@ export default class User extends Vue {
             throw err;
         } finally {
             this.loadingCombobox = false;
-            this.menu = false;
+            this.menu[this.tempMenuIndex] = false;
         }
     }
 
