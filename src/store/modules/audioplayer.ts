@@ -36,7 +36,7 @@ export default class AudioPlayer extends VuexModule implements IAudioPlayer {
         this.audio.pause();
     }
 
-    @Action({ commit: "postNextMusic", rawError: true })
+    @Action({ commit: "postPreviousMusic", rawError: true })
     public async previousMusic() {
         this.audio.pause();
     }
